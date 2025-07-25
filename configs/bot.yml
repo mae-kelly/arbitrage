@@ -1,0 +1,18 @@
+# Bot Configuration
+bot:
+  name: "Crypto Arbitrage Bot"
+  version: "1.0.0"
+  mode: "paper"  # paper or live
+  
+# Logging
+logging:
+  level: "INFO"
+  file: "logs/bot.log"
+  max_size: "10MB"
+  backup_count: 5
+
+# Performance
+performance:
+  update_interval: 5  # seconds
+  max_concurrent_requests: 10
+  timeout: 30  # seconds

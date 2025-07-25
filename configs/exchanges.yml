@@ -1,0 +1,25 @@
+# Exchange Configuration
+exchanges:
+  binance:
+    sandbox: true
+    rateLimit: 1200
+    
+  coinbase:
+    sandbox: true
+    rateLimit: 1000
+    
+  kraken:
+    sandbox: true
+    rateLimit: 2000
+
+# Trading pairs to monitor
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+  - BNB/USDT
+
+# Risk management
+risk:
+  max_position_size: 1000  # USD
+  min_profit_percentage: 0.5
+  max_slippage: 0.1

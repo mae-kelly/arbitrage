@@ -1,0 +1,47 @@
+from dataclasses import dataclass
+from typing import List, Optional, Dict, Any
+from decimal import Decimal
+from datetime import datetime
+
+@dataclass
+class PriceLevel:
+    price: Decimal
+    quantity: Decimal
+    timestamp: datetime
+
+@dataclass
+class Orderbook:
+    exchange: str
+    symbol: str
+    bids: List[PriceLevel]
+    asks: List[PriceLevel]
+    timestamp: datetime
+    
+    @property
+    def best_bid(self) -> Optional[Decimal]:
+        return self.bids[0].price if self.bids else None
+    
+    @property
+    def best_ask(self) -> Optional[Decimal]:
+        return self.asks[0].price if self.asks else None
+    
+    @property
+    def spread(self) -> Optional[Decimal]:
+        if self.best_bid and self.best_ask:
+            return self.best_ask - self.best_bid
+        return None
+
+@dataclass
+class ArbitrageOpportunity:
+    id: str
+    type: str  # 'spatial', 'triangular', 'cross_chain'
+    symbol: str
+    buy_exchange: str
+    sell_exchange: str
+    buy_price: Decimal
+    sell_price: Decimal
+    profit_pct: Decimal
+    profit_usd: Decimal
+    confidence: float
+    timestamp: datetime
+    expires_at: datetime
