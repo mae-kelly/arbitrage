@@ -1,0 +1,19 @@
+# Tier 1 Exchange Configuration (Major exchanges)
+exchanges:
+  binance:
+    priority: 1
+    max_latency_ms: 50
+    rate_limit: 1200
+    websocket_url: "wss://stream.binance.com:9443"
+    
+  coinbase:
+    priority: 2
+    max_latency_ms: 50
+    rate_limit: 1000
+    websocket_url: "wss://ws-feed.pro.coinbase.com"
+    
+  kraken:
+    priority: 3
+    max_latency_ms: 50
+    rate_limit: 2000
+    websocket_url: "wss://ws.kraken.com"
