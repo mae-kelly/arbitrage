@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create comprehensive Optimism configuration with:",
+  "// 1": "Optimism mainnet RPC and sequencer configs",
+  "// 2": "Layer 2 gas optimization for OP token",
+  "// 3": "Velodrome and other Optimism DEX configs",
+  "// 4": "Aave V3 Optimism market configurations",
+  "// 5": "Optimism Gateway bridge integration",
+  "// 6": "Challenge period and fraud proof considerations",
+  "// 7": "Optimism-specific arbitrage strategies",
+  "// 8": "Integration with OP governance and rewards",
+  "// 9": "Performance optimization for optimistic rollups",
+  "// 10": "Security considerations for challenge mechanism",
+  "// 11": "Emergency procedures for sequencer issues",
+  "// 12": "Integration with Optimism Collective",
+  "// 13": "Cross-layer arbitrage opportunities",
+  "// 14": "Superchain integration preparations",
+  "// 15": "Future Base chain integration strategies"
+}

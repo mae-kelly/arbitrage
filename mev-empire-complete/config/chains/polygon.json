@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create comprehensive Polygon configuration with:",
+  "// 1": "Polygon RPC endpoints and validator preferences",
+  "// 2": "MATIC token gas optimization strategies",
+  "// 3": "Polygon-specific contract deployments", 
+  "// 4": "Bridge integration with Ethereum mainnet",
+  "// 5": "QuickSwap and SushiSwap configurations",
+  "// 6": "Aave Polygon market configurations",
+  "// 7": "Cross-chain arbitrage opportunities",
+  "// 8": "Polygon-specific risk parameters",
+  "// 9": "Fast finality and confirmation settings",
+  "// 10": "Integration with Polygon CDK chains",
+  "// 11": "Polygon ID and zero-knowledge features",
+  "// 12": "Layer 2 specific optimizations",
+  "// 13": "Polygon ecosystem token configurations",
+  "// 14": "Emergency procedures for bridge issues",
+  "// 15": "Performance tuning for high throughput"
+}

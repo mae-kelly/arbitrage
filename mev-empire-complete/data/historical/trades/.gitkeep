@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory stores historical trade data with:
+# 1. Executed trade records with performance metrics
+# 2. Strategy-specific trade analysis
+# 3. Profit and loss historical data
+# 4. Risk metrics and drawdown analysis
+# 5. Trade execution quality metrics

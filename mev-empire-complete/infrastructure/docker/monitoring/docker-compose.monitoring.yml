@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Docker Compose for monitoring stack:
+# 1. Prometheus server with persistent storage
+# 2. Grafana with dashboard provisioning
+# 3. AlertManager for notification routing
+# 4. Node exporter for system metrics
+# 5. cAdvisor for container metrics
+# 6. Elasticsearch for log aggregation
+# 7. Logstash for log processing
+# 8. Kibana for log visualization
+# 9. Jaeger for distributed tracing
+# 10. Redis for metrics caching
+# 11. Network configuration and service discovery
+# 12. Volume management and data persistence
+# 13. Security configuration and access control
+# 14. Environment-specific configurations
+# 15. Health checks and dependency management
+# Use Docker Compose best practices for production

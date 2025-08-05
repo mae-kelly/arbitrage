@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory stores historical opportunity data with:
+# 1. Detected arbitrage opportunities over time
+# 2. Opportunity success and failure analysis
+# 3. Market condition correlation with opportunities
+# 4. Strategy effectiveness historical data
+# 5. Predictive model training datasets

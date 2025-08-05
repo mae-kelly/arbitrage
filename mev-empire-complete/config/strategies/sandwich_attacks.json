@@ -1,0 +1,19 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create sandwich attack strategy configuration with:",
+  "// WARNING": "Only implement where legally permissible and ethical",
+  "// 1": "Target transaction size thresholds and filters",
+  "// 2": "Profit margin requirements and calculations",
+  "// 3": "Gas price optimization for transaction ordering",
+  "// 4": "MEV relay preferences and configurations",
+  "// 5": "Risk assessment for sandwich profitability",
+  "// 6": "Maximum position sizes and exposure limits",
+  "// 7": "Bundle construction and optimization settings",
+  "// 8": "Slippage calculations and profit estimation",
+  "// 9": "Performance metrics and success tracking",
+  "// 10": "Compliance and legal restriction settings",
+  "// 11": "Ethical guidelines and restriction parameters",
+  "// 12": "Emergency stop and risk management",
+  "// 13": "Integration with mempool monitoring",
+  "// 14": "Cross-DEX sandwich opportunities",
+  "// 15": "Regulatory compliance and reporting"
+}

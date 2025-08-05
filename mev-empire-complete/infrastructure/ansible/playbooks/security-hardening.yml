@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Ansible playbook for security hardening:
+# 1. Operating system security configuration
+# 2. Firewall rules and network security
+# 3. User and access management
+# 4. SSH hardening and key management
+# 5. File system permissions and encryption
+# 6. Service configuration and hardening
+# 7. Audit logging and monitoring
+# 8. Intrusion detection and prevention
+# 9. Vulnerability scanning and patching
+# 10. Compliance with security frameworks
+# 11. Backup encryption and security
+# 12. Network segmentation and isolation
+# 13. Container security and scanning
+# 14. Secrets management and rotation
+# 15. Incident response preparation
+# Follow CIS benchmarks and security best practices

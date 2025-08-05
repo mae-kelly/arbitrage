@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Kubernetes deployment for MEV Empire core application:
+# 1. Deployment with rolling update strategy
+# 2. ConfigMap for application configuration
+# 3. Secret for sensitive data (API keys, private keys)
+# 4. Service for internal communication
+# 5. Ingress for external access with TLS
+# 6. HorizontalPodAutoscaler for dynamic scaling
+# 7. PodDisruptionBudget for availability
+# 8. ResourceQuota and LimitRange
+# 9. NetworkPolicy for pod-to-pod security
+# 10. ServiceAccount with RBAC permissions
+# 11. PersistentVolumeClaim for data storage
+# 12. Liveness and readiness probes
+# 13. Security context and pod security standards
+# 14. Affinity and anti-affinity rules
+# 15. Monitoring and logging annotations
+# Use Kubernetes best practices for production deployments

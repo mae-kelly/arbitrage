@@ -1,0 +1,10 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory will contain trained price prediction models:
+# 1. LSTM models for time series forecasting
+# 2. Transformer models for sequence prediction
+# 3. CNN models for pattern recognition
+# 4. Ensemble models combining multiple approaches
+# 5. Model checkpoints and weights
+# 6. Model configuration files
+# 7. Feature scaling and preprocessing pipelines
+# 8. Model performance metrics and evaluation

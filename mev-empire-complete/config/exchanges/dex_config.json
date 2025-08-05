@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create decentralized exchange configuration with:",
+  "// 1": "Router and factory contract addresses per DEX",
+  "// 2": "Fee structures and slippage tolerances",
+  "// 3": "Liquidity pool monitoring and analysis",
+  "// 4": "Gas optimization strategies per DEX",
+  "// 5": "MEV protection and sandwich resistance",
+  "// 6": "Cross-DEX routing and optimization",
+  "// 7": "Performance metrics and success tracking",
+  "// 8": "Risk management and exposure limits",
+  "// 9": "Integration with yield farming protocols",
+  "// 10": "Emergency procedures and circuit breakers",
+  "// 11": "Token approval and allowance management",
+  "// 12": "Multi-chain DEX coordination",
+  "// 13": "Liquidity provider reward optimization",
+  "// 14": "Security considerations and audit requirements",
+  "// 15": "Future DEX integration preparations"
+}

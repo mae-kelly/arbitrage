@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory stores ML predictions with:
+# 1. Real-time model predictions and confidence scores
+# 2. Prediction accuracy tracking and validation
+# 3. Model performance monitoring data
+# 4. Prediction-based trading signals
+# 5. Model drift detection and retraining triggers

@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create comprehensive Arbitrum configuration with:",
+  "// 1": "Arbitrum One and Nova RPC configurations",
+  "// 2": "Layer 2 gas optimization strategies",
+  "// 3": "Arbitrum-specific DEX configurations (Camelot, GMX)",
+  "// 4": "Bridge configurations with Ethereum L1",
+  "// 5": "Radiant Capital and other lending protocols",
+  "// 6": "Arbitrum sequencer monitoring and fallbacks",
+  "// 7": "Challenge period considerations for withdrawals",
+  "// 8": "Layer 2 specific arbitrage opportunities", 
+  "// 9": "Integration with Arbitrum ecosystem tokens",
+  "// 10": "Performance optimization for L2 environment",
+  "// 11": "Security considerations for rollup technology",
+  "// 12": "Emergency procedures for sequencer downtime",
+  "// 13": "Integration with Arbitrum governance",
+  "// 14": "Cross-layer MEV strategies",
+  "// 15": "Future integration with Arbitrum Stylus"
+}

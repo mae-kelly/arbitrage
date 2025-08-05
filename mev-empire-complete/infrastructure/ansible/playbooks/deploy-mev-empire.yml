@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Ansible playbook for MEV Empire deployment:
+# 1. Infrastructure provisioning and configuration
+# 2. Operating system hardening and security
+# 3. Docker and Kubernetes installation
+# 4. Database setup and configuration
+# 5. Application deployment and configuration
+# 6. Service registration and discovery
+# 7. Monitoring and logging setup
+# 8. Security certificate management
+# 9. Backup and disaster recovery setup
+# 10. Performance tuning and optimization
+# 11. Health checks and validation
+# 12. Rollback and recovery procedures
+# 13. Compliance and audit configuration
+# 14. User and access management
+# 15. Automation and CI/CD integration
+# Use Ansible best practices with idempotent tasks

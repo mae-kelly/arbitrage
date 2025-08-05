@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Grafana dashboard configurations:
+# 1. MEV Empire overview dashboard
+# 2. Strategy performance dashboards
+# 3. Infrastructure monitoring dashboards
+# 4. Trading performance and P&L dashboards
+# 5. Risk management and exposure dashboards
+# 6. Exchange connectivity and latency dashboards
+# 7. Database performance dashboards
+# 8. Application performance monitoring dashboards
+# 9. Security and audit dashboards
+# 10. Cost optimization dashboards
+# 11. SLA and SLO monitoring dashboards
+# 12. Alerting and incident response dashboards
+# 13. Capacity planning dashboards
+# 14. User activity and API usage dashboards
+# 15. Custom business metrics dashboards
+# Use dashboard as code with version control

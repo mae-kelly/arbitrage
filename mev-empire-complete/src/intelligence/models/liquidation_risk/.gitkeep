@@ -1,0 +1,8 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory will contain liquidation risk models:
+# 1. Classification models for liquidation prediction
+# 2. Regression models for risk scoring
+# 3. Survival analysis models for time-to-liquidation
+# 4. Ensemble models for improved accuracy
+# 5. Feature importance analysis
+# 6. Model calibration and probability scores

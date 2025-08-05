@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory will contain opportunity scoring models:
+# 1. Binary classification for opportunity detection
+# 2. Ranking models for opportunity prioritization
+# 3. Regression models for profit prediction
+# 4. Multi-objective optimization models
+# 5. Reinforcement learning models for strategy selection

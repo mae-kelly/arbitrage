@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create DEX arbitrage strategy configuration with:",
+  "// 1": "Minimum profit thresholds for each DEX pair",
+  "// 2": "Gas cost calculations and optimization settings",
+  "// 3": "Slippage tolerance and protection parameters",
+  "// 4": "Maximum position sizes and risk limits",
+  "// 5": "DEX-specific routing and fee configurations",
+  "// 6": "Cross-chain arbitrage timing and coordination",
+  "// 7": "Flash loan provider preferences and fallbacks", 
+  "// 8": "MEV protection and sandwich attack resistance",
+  "// 9": "Performance metrics and success criteria",
+  "// 10": "Risk management and circuit breaker settings",
+  "// 11": "Token whitelist and blacklist configurations",
+  "// 12": "Monitoring and alerting thresholds",
+  "// 13": "Strategy activation and deactivation triggers",
+  "// 14": "Integration with other strategy configurations",
+  "// 15": "Backtesting and simulation parameters"
+}

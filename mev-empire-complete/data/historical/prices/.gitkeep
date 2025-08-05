@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory stores historical price data with:
+# 1. OHLCV data from all exchanges and time frames
+# 2. Tick-by-tick price data for high-frequency analysis
+# 3. Cross-exchange price comparison datasets
+# 4. Historical arbitrage opportunity data
+# 5. Data compression and archival strategies

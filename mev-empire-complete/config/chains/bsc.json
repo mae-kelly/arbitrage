@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create comprehensive BSC configuration with:",
+  "// 1": "Binance Smart Chain RPC configurations",
+  "// 2": "BNB token gas optimization and strategies",
+  "// 3": "PancakeSwap V2/V3 integration settings",
+  "// 4": "Venus Protocol lending configurations", 
+  "// 5": "Cross-chain bridge settings with Ethereum",
+  "// 6": "BSC-specific token and contract addresses",
+  "// 7": "Validator preferences and MEV strategies",
+  "// 8": "Risk parameters for BSC ecosystem",
+  "// 9": "Integration with Binance exchange APIs",
+  "// 10": "BSC ecosystem DeFi protocol configurations",
+  "// 11": "Performance optimization for fast blocks",
+  "// 12": "Security considerations for centralized aspects",
+  "// 13": "Compliance with Binance ecosystem policies",
+  "// 14": "Emergency procedures and risk management",
+  "// 15": "Integration with BNB Chain ecosystem"
+}

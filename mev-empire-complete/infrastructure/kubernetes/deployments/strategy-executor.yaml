@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Kubernetes deployment for strategy execution pods:
+# 1. Deployment for each trading strategy
+# 2. Resource requests and limits for each strategy
+# 3. Strategy-specific configuration via ConfigMap
+# 4. Secrets for exchange API keys and credentials
+# 5. Inter-pod communication via Services
+# 6. Strategy-specific scaling policies
+# 7. Pod disruption budgets for high availability
+# 8. Node affinity for performance optimization
+# 9. Init containers for dependency checks
+# 10. Sidecar containers for monitoring
+# 11. Volume mounts for shared data
+# 12. Health checks specific to each strategy
+# 13. Security contexts and capabilities
+# 14. Resource isolation and quality of service
+# 15. Monitoring and alerting configurations
+# Use separate deployments for strategy isolation

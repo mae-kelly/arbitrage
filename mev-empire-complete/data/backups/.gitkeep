@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory stores system backups with:
+# 1. Automated database backups with encryption
+# 2. Configuration and secret backups
+# 3. Historical data archives
+# 4. Disaster recovery snapshots
+# 5. Backup validation and integrity checks

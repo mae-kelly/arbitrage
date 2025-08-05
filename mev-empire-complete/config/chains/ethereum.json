@@ -1,0 +1,57 @@
+{
+  "chain_id": 1,
+  "name": "ethereum",
+  "rpc_urls": [
+    "https://eth-mainnet.alchemyapi.io/v2/YOUR_KEY",
+    "https://mainnet.infura.io/v3/YOUR_KEY",
+    "https://rpc.ankr.com/eth"
+  ],
+  "gas_settings": {
+    "max_gas_price": 300000000000,
+    "gas_multiplier": 1.2,
+    "priority_fee": 2000000000
+  },
+  "contracts": {
+    "flash_loan_aggregator": "0x1234567890123456789012345678901234567890",
+    "mev_executor": "0x2345678901234567890123456789012345678901",
+    "cross_chain_coordinator": "0x3456789012345678901234567890123456789012"
+  },
+  "tokens": {
+    "WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "USDC": "0xA0b86a33E6441Fb63F1Fa8087fFF1E71cC51D8E2",
+    "USDT": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "DAI": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "WBTC": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+  },
+  "dexs": {
+    "uniswap_v2": {
+      "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+      "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "fee": 0.003
+    },
+    "uniswap_v3": {
+      "router": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+      "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      "quoter": "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6"
+    },
+    "sushiswap": {
+      "router": "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F",
+      "factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
+      "fee": 0.003
+    }
+  },
+  "lending": {
+    "aave": {
+      "lending_pool": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "data_provider": "0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d"
+    },
+    "compound": {
+      "comptroller": "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B"
+    }
+  },
+  "mev_relays": {
+    "flashbots": "https://relay.flashbots.net",
+    "eden": "https://api.edennetwork.io/v1/bundle",
+    "bloxroute": "https://mev.api.blxrbdn.com"
+  }
+}

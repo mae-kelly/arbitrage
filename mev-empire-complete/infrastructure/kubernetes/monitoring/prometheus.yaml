@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Prometheus monitoring configuration:
+# 1. Prometheus operator and custom resources
+# 2. ServiceMonitor for automatic service discovery
+# 3. PrometheusRule for alerting rules
+# 4. Grafana operator and dashboard provisioning
+# 5. AlertManager configuration and routing
+# 6. Custom metrics for MEV strategies
+# 7. Infrastructure monitoring (nodes, pods, services)
+# 8. Application performance monitoring
+# 9. Business metrics and SLI/SLO tracking
+# 10. Log aggregation and analysis
+# 11. Distributed tracing configuration
+# 12. Metrics retention and storage policies
+# 13. High availability and federation
+# 14. Security and access control
+# 15. Integration with external systems
+# Use GitOps approach for monitoring configuration

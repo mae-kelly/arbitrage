@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create strategy-specific Docker configuration:
+# 1. Base image with Python and trading libraries
+# 2. Strategy-specific dependencies and requirements
+# 3. Configuration management for each strategy
+# 4. Resource allocation and limits
+# 5. Security context and user permissions
+# 6. Health checks for strategy execution
+# 7. Graceful shutdown and cleanup procedures
+# 8. Integration with message queues and databases
+# 9. Monitoring and metrics collection
+# 10. Log aggregation and structured logging
+# 11. Error handling and recovery mechanisms
+# 12. Performance optimization and tuning
+# 13. Testing and validation in container
+# 14. CI/CD integration and automation
+# 15. Container orchestration readiness
+# Optimize for fast startup and low resource usage

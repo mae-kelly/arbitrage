@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Kubernetes deployment for database services:
+# 1. StatefulSet for PostgreSQL primary and replicas
+# 2. Redis cluster deployment for caching
+# 3. Persistent volume claims for data persistence
+# 4. Database initialization scripts via ConfigMap
+# 5. Database credentials via Secrets
+# 6. Headless services for StatefulSet communication
+# 7. Backup and restore job configurations
+# 8. Database monitoring and metrics
+# 9. High availability and failover configuration
+# 10. Storage class optimization
+# 11. Database connection pooling
+# 12. Security policies and network isolation
+# 13. Backup schedule and retention policies
+# 14. Performance tuning configurations
+# 15. Disaster recovery procedures
+# Use operators for database lifecycle management

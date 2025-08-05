@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Kubernetes services for monitoring stack:
+# 1. Prometheus server and operator deployment
+# 2. Grafana dashboard service
+# 3. AlertManager for alert routing
+# 4. Node exporter for infrastructure metrics
+# 5. Application-specific metric exporters
+# 6. Service monitors for automatic discovery
+# 7. Persistent storage for metrics data
+# 8. High availability configurations
+# 9. Authentication and authorization
+# 10. Dashboard provisioning and configuration
+# 11. Alert rule definitions
+# 12. Notification channel configurations
+# 13. Metrics retention and storage optimization
+# 14. Custom metrics and SLI/SLO definitions
+# 15. Integration with external monitoring systems
+# Use Prometheus operator for declarative monitoring

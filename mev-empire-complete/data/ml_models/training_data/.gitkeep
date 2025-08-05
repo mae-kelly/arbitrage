@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory stores ML training data with:
+# 1. Preprocessed datasets for model training
+# 2. Feature engineering pipelines and transformations
+# 3. Data validation and quality checks
+# 4. Cross-validation and test datasets
+# 5. Data augmentation and synthetic data

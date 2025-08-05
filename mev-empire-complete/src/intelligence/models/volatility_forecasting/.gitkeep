@@ -1,0 +1,7 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# This directory will contain volatility forecasting models:
+# 1. GARCH family models
+# 2. Neural network volatility models
+# 3. Stochastic volatility models
+# 4. Volatility surface models
+# 5. Cross-asset volatility models

@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create centralized exchange configuration with:",
+  "// 1": "API rate limits and throttling for each exchange",
+  "// 2": "Trading fee structures and VIP level benefits",
+  "// 3": "Order types and execution strategies per exchange",
+  "// 4": "Risk management and position limits",
+  "// 5": "Authentication and security configurations",
+  "// 6": "Failover and redundancy settings",
+  "// 7": "Performance monitoring and latency tracking",
+  "// 8": "Compliance and regulatory requirements",
+  "// 9": "Currency pair support and restrictions",
+  "// 10": "Withdrawal limits and processing times",
+  "// 11": "Market data feed configurations",
+  "// 12": "Error handling and retry mechanisms",
+  "// 13": "Integration with portfolio management",
+  "// 14": "Emergency procedures and circuit breakers",
+  "// 15": "Performance optimization and caching"
+}

@@ -1,0 +1,18 @@
+{
+  "// IMPLEMENTATION_INSTRUCTIONS_FOR_CLAUDE": "Create liquidation hunting strategy configuration with:",
+  "// 1": "Health factor thresholds for liquidation triggers",
+  "// 2": "Protocol-specific liquidation incentive rates",
+  "// 3": "Minimum liquidation amounts and profit targets", 
+  "// 4": "Gas cost optimization for liquidation transactions",
+  "// 5": "Risk assessment parameters for liquidation execution",
+  "// 6": "Multi-protocol coordination and priority settings",
+  "// 7": "Flash loan integration for large liquidations",
+  "// 8": "Liquidation queue management and timing",
+  "// 9": "Collateral type preferences and restrictions",
+  "// 10": "Performance tracking and success metrics",
+  "// 11": "Risk management and position size limits",
+  "// 12": "Emergency procedures for market volatility",
+  "// 13": "Integration with price oracle configurations",
+  "// 14": "Compliance and regulatory considerations",
+  "// 15": "Machine learning model parameters for prediction"
+}

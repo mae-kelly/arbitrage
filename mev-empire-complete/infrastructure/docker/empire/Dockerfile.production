@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create production-optimized Dockerfile:
+# 1. Multi-stage build for minimal image size
+# 2. Non-root user for security
+# 3. Distroless or minimal base image
+# 4. Security scanning and vulnerability management
+# 5. Build optimization and layer caching
+# 6. Health check implementation
+# 7. Signal handling for graceful shutdown
+# 8. Environment variable configuration
+# 9. Volume mounts for persistent data
+# 10. Network configuration and port exposure
+# 11. Resource limits and constraints
+# 12. Logging configuration and output
+# 13. Secrets management integration
+# 14. Monitoring and observability hooks
+# 15. Container registry optimization
+# Use Docker best practices for production containers

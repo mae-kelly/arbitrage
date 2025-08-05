@@ -1,0 +1,18 @@
+# IMPLEMENTATION INSTRUCTIONS FOR CLAUDE:
+# Create Kubernetes services for MEV Empire API:
+# 1. ClusterIP service for internal API communication
+# 2. LoadBalancer service for external API access
+# 3. Service mesh integration (Istio/Linkerd)
+# 4. Service discovery and registration
+# 5. Load balancing strategies and session affinity
+# 6. Health check configurations
+# 7. Service-to-service authentication
+# 8. Rate limiting and traffic policies
+# 9. Circuit breaker and retry policies
+# 10. Observability and tracing
+# 11. Canary deployment strategies
+# 12. Blue-green deployment support
+# 13. A/B testing configurations
+# 14. Geographic traffic routing
+# 15. Security policies and mTLS
+# Use service mesh for advanced traffic management
