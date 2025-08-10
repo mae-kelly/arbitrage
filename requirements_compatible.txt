@@ -1,0 +1,14 @@
+torch
+numpy
+pandas
+web3
+aiohttp
+websockets
+scikit-learn
+scipy
+matplotlib
+seaborn
+redis
+eth-abi
+eth-account
+hexbytes

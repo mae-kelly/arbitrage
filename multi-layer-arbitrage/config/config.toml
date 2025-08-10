@@ -1,0 +1,41 @@
+[exchanges]
+enable_binance = true
+enable_coinbase = true
+enable_kraken = true
+enable_okx = true
+enable_bybit = true
+enable_kucoin = true
+enable_huobi = true
+enable_gateio = true
+
+[layer2]
+enable_arbitrum = true
+enable_optimism = true
+enable_polygon = true
+enable_base = true
+enable_zksync = true
+
+[dex]
+enable_uniswap_v3 = true
+enable_sushiswap = true
+enable_curve = true
+enable_balancer = true
+enable_1inch = true
+
+[execution]
+min_profit_percentage = 0.05
+max_slippage = 0.02
+max_gas_price_gwei = 50
+enable_flash_loans = true
+max_position_size_usd = 100000
+
+[monitoring]
+alert_threshold_percentage = 0.5
+telegram_bot_token = ""
+discord_webhook = ""
+
+[risk]
+max_exposure_usd = 50000
+stop_loss_percentage = 0.5
+max_concurrent_trades = 10
+cooldown_period_ms = 100

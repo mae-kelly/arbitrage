@@ -1,0 +1,45 @@
+{
+    "ethereum": {
+        "chainId": 1,
+        "rpc": "wss://eth-mainnet.g.alchemy.com/v2/YOUR_KEY",
+        "flashLoanProviders": [
+            {
+                "name": "Aave",
+                "address": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+                "fee": 0.0009
+            },
+            {
+                "name": "dYdX",
+                "address": "0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e",
+                "fee": 0
+            }
+        ]
+    },
+    "arbitrum": {
+        "chainId": 42161,
+        "rpc": "wss://arb-mainnet.g.alchemy.com/v2/YOUR_KEY",
+        "flashLoanProviders": [
+            {
+                "name": "Aave",
+                "address": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+                "fee": 0.0009
+            }
+        ]
+    },
+    "optimism": {
+        "chainId": 10,
+        "rpc": "wss://opt-mainnet.g.alchemy.com/v2/YOUR_KEY",
+        "flashLoanProviders": []
+    },
+    "polygon": {
+        "chainId": 137,
+        "rpc": "wss://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY",
+        "flashLoanProviders": [
+            {
+                "name": "Aave",
+                "address": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+                "fee": 0.0009
+            }
+        ]
+    }
+}

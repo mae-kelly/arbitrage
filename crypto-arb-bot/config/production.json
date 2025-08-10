@@ -1,0 +1,36 @@
+{
+    "trading": {
+        "maxPositionSize": 1000000,
+        "maxDailyLoss": 50000,
+        "minSpread": 0.003,
+        "maxGasPrice": "200",
+        "slippageTolerance": 0.005
+    },
+    "chains": {
+        "ethereum": {
+            "chainId": 1,
+            "confirmations": 2,
+            "gasMultiplier": 1.2
+        },
+        "arbitrum": {
+            "chainId": 42161,
+            "confirmations": 1,
+            "gasMultiplier": 1.1
+        },
+        "optimism": {
+            "chainId": 10,
+            "confirmations": 1,
+            "gasMultiplier": 1.1
+        }
+    },
+    "monitoring": {
+        "alertThreshold": 1000,
+        "metricsInterval": 60,
+        "healthcheckInterval": 10
+    },
+    "ml": {
+        "retrainInterval": 3600,
+        "minDataPoints": 10000,
+        "confidenceThreshold": 0.8
+    }
+}
