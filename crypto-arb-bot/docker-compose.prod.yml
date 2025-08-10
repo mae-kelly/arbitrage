@@ -1,70 +1,55 @@
 version: '3.8'
-
 services:
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
-
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: arbitrage
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  bot:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
+  arbitrage-bot:
+    build: .
+    restart: always
     environment:
       - RUST_LOG=info
-      - REDIS_URL=redis://redis:6379
-      - DATABASE_URL=postgresql://admin:${DB_PASSWORD}@postgres:5432/arbitrage
+      - DATABASE_URL=postgresql://postgres:${DB_PASSWORD}@db:5432/arbitrage
     env_file:
-      - .env.prod
+      - .env
     depends_on:
+      - db
       - redis
-      - postgres
-    volumes:
-      - ./config:/app/config
-      - ./logs:/app/logs
-    deploy:
-      replicas: 3
-      resources:
-        limits:
-          cpus: '4'
-          memory: 8G
-        reservations:
-          cpus: '2'
-          memory: 4G
-
-  monitoring:
-    image: grafana/grafana:latest
     ports:
-      - "3000:3000"
+      - "3030:3030"
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./logs:/app/logs
+      
+  db:
+    image: postgres:15
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=arbitrage
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+      
   prometheus:
     image: prom/prometheus:latest
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
+      
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana-dashboard.json:/var/lib/grafana/dashboards/arbitrage.json
 
 volumes:
-  redis_data:
   postgres_data:
-  grafana_data:
+  redis_data:
   prometheus_data:
+  grafana_data:
