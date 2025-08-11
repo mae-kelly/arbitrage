@@ -1,0 +1,1 @@
+/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/ultra-fast-arbitrage-bot/target/release/ultra-fast-arbitrage-bot: /Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/ultra-fast-arbitrage-bot/src/main.rs

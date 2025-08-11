@@ -1,0 +1,10 @@
+/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/ultra-fast-arbitrage-bot/target/release/deps/secp256k1_sys-535fd6f9b753a007.d: /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/lib.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/macros.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/types.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/recovery.rs
+
+/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/ultra-fast-arbitrage-bot/target/release/deps/libsecp256k1_sys-535fd6f9b753a007.rlib: /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/lib.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/macros.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/types.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/recovery.rs
+
+/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/ultra-fast-arbitrage-bot/target/release/deps/libsecp256k1_sys-535fd6f9b753a007.rmeta: /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/lib.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/macros.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/types.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/recovery.rs
+
+/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/lib.rs:
+/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/macros.rs:
+/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/types.rs:
+/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/secp256k1-sys-0.8.2/src/recovery.rs:

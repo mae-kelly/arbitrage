@@ -1,9 +1,0 @@
-/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/target/release/deps/utf8_iter-669044ef2b7da7e3.d: /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/lib.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/indices.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/report.rs
-
-/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/target/release/deps/libutf8_iter-669044ef2b7da7e3.rlib: /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/lib.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/indices.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/report.rs
-
-/Users/maevekelly/lightning-arbitrage/hft-arbitrage-bot/target/release/deps/libutf8_iter-669044ef2b7da7e3.rmeta: /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/lib.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/indices.rs /Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/report.rs
-
-/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/lib.rs:
-/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/indices.rs:
-/Users/maevekelly/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf8_iter-1.0.4/src/report.rs:

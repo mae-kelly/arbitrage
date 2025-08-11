@@ -1,11 +1,12 @@
 [package]
-name = "ultra-fast-flash-arbitrage"
-version = "0.1.0"
+name = "m1-gpu-only-arbitrage-bot"
+version = "1.0.0"
 edition = "2021"
+description = "M1 GPU ONLY arbitrage bot - NO CPU fallback"
 
 [dependencies]
 tokio = { version = "1.0", features = ["full"] }
-reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+reqwest = { version = "0.11", features = ["json", "native-tls"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tracing = "0.1"
@@ -14,9 +15,35 @@ anyhow = "1.0"
 crossbeam = "0.8"
 rayon = "1.8"
 
+# M1 GPU ONLY - Metal is REQUIRED, not optional
+metal = "0.27"
+objc = "0.2"
+core-foundation = "0.9"
+
+# Web3 for flash loans
+web3 = "0.19"
+ethers = "2.0"
+
+chrono = "0.4"
+config = "0.13"
+toml = "0.8"
+
 [profile.release]
 opt-level = 3
-lto = true
+lto = "fat"
 codegen-units = 1
 panic = "abort"
 strip = true
+
+[target.aarch64-apple-darwin]
+rustflags = [
+    "-C", "target-cpu=apple-m1",
+    "-C", "target-feature=+neon,+fp-armv8,+apple-a14",
+    "-C", "link-arg=-framework", "-C", "link-arg=Metal",
+    "-C", "link-arg=-framework", "-C", "link-arg=MetalPerformanceShaders",
+    "-C", "link-arg=-framework", "-C", "link-arg=Accelerate",
+]
+
+[[bin]]
+name = "m1-gpu-only-arbitrage-bot"
+path = "src/main.rs"
