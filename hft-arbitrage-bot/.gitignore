@@ -1,0 +1,282 @@
+# ================================
+# ARBITRAGE BOT .gitignore
+# ================================
+
+# ================================
+# SECURITY - NEVER COMMIT THESE!
+# ================================
+
+# API Keys and Secrets
+*.key
+*.pem
+*.p12
+*.pfx
+config.toml
+config.json
+.env
+.env.*
+secrets/
+keys/
+credentials/
+
+# Private keys and wallets
+private_key*
+wallet*
+mnemonic*
+seed*
+keystore/
+
+# Exchange API credentials
+*api_key*
+*secret*
+*passphrase*
+
+# ================================
+# RUST BUILD ARTIFACTS
+# ================================
+
+# Compiled files
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo files
+Cargo.lock
+.cargo/
+
+# Generated documentation
+/doc/
+/docs/book/
+
+# Test artifacts
+/tests/tmp/
+
+# ================================
+# TRADING DATA & LOGS
+# ================================
+
+# Trading logs
+logs/
+*.log
+*.log.*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# CSV data files
+data/
+*.csv
+trades/
+market_data/
+
+# Backup files
+*.backup
+*.bak
+backups/
+
+# ================================
+# DEVELOPMENT FILES
+# ================================
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# vim temporary files
+*.tmp
+*.temp
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ================================
+# OS GENERATED FILES
+# ================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ================================
+# PYTHON (if using Python scripts)
+# ================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ================================
+# NODE.JS (if using JS tools)
+# ================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ================================
+# DOCKER & CONTAINERS
+# ================================
+
+# Docker
+.dockerignore
+Dockerfile.local
+docker-compose.override.yml
+.docker/
+
+# ================================
+# MONITORING & METRICS
+# ================================
+
+# Prometheus metrics
+metrics/
+prometheus/
+
+# Grafana
+grafana/
+
+# Performance profiles
+*.prof
+*.trace
+
+# ================================
+# TESTING & BENCHMARKING
+# ================================
+
+# Test results
+test-results/
+coverage/
+*.coverage
+htmlcov/
+
+# Benchmark results
+benchmarks/
+*.bench
+
+# ================================
+# TEMPORARY & CACHE FILES
+# ================================
+
+# General temporary files
+tmp/
+temp/
+cache/
+.cache/
+
+# Lock files
+*.lock
+
+# Misc
+*.orig
+*.rej
+.*.swp
+.*.swo
+
+# ================================
+# DOCUMENTATION BUILD
+# ================================
+
+# Sphinx documentation
+docs/_build/
+
+# MkDocs documentation
+site/
+
+# ================================
+# CONFIGURATION TEMPLATES
+# ================================
+
+# Keep example configs but not real ones
+!config.example.toml
+!config.template.json
+!.env.example
+
+# ================================
+# LARGE FILES / BINARIES
+# ================================
+
+# Exclude large data files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Exclude binary executables (except release builds)
+/release/
+/debug/
+
+# ================================
+# EXCHANGE-SPECIFIC DATA
+# ================================
+
+# Historical price data
+price_history/
+candles/
+orderbook_snapshots/
+
+# Trade execution logs
+executions/
+fills/
+orders/
+
+# P&L reports
+pnl/
+reports/
+analytics/
