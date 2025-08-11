@@ -1,0 +1,30 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8
+    ports:
+      - "9000:9000"
+      - "8123:8123"
+    environment:
+      - CLICKHOUSE_DB=arbitrage
+    restart: unless-stopped
+
+  arbitrage-bot:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - CLICKHOUSE_URL=clickhouse://clickhouse:9000
+      - PYTHONPATH=/app
+    depends_on:
+      - redis
+      - clickhouse
+    volumes:
+      - ./logs:/app/logs
+    restart: "no"
