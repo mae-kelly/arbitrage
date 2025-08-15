@@ -293,3 +293,7 @@ mod blockchain;
 mod ml_engine;
 mod mev_protection;
 mod cross_chain;
+
+mod risk_management;
+mod execution;
+mod compliance;

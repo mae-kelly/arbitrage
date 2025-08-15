@@ -136,3 +136,9 @@ version = "0.2"
 # Additional performance deps
 num_cpus = "1.16"
 rayon = "1.7"
+
+# Additional production dependencies
+nalgebra = "0.32"
+rand_distr = "0.4"
+uuid = { version = "1.0", features = ["v4"] }
+async-trait = "0.1"
