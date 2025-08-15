@@ -1,24 +1,18 @@
 [package]
-name = "realistic-arbitrage-bot"
+name = "ultra-arbitrage-bot"
 version = "1.0.0"
 edition = "2021"
-description = "Realistic cryptocurrency arbitrage bot"
 
 [dependencies]
 tokio = { version = "1.0", features = ["full"] }
-reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 anyhow = "1.0"
-thiserror = "1.0"
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-subscriber = "0.3"
 chrono = { version = "0.4", features = ["serde"] }
-config = "0.13"
-dotenv = "0.15"
-tokio-tungstenite = { version = "0.20", features = ["native-tls"] }
-futures-util = "0.3"
-rust_decimal = "1.32"
+rand = "0.8"
 
 [profile.release]
 opt-level = 3
@@ -26,8 +20,5 @@ lto = true
 codegen-units = 1
 
 [[bin]]
-name = "arbitrage-bot"
+name = "ultra-arbitrage-bot"
 path = "src/main.rs"
-
-# Additional dependencies for massive scale discovery
-serde_json = "1.0"

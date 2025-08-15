@@ -1,11 +1,12 @@
 use anyhow::Result;
 use reqwest::Client;
+use serde::{Serialize, Deserialize};
 use serde_json::Value;
 use std::collections::{HashMap, HashSet};
 use tokio::time::{sleep, Duration};
-use tracing::{info, warn, error};
+use tracing::{info, warn};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]  // Added Serialize trait
 pub struct ExchangeInfo {
     pub name: String,
     pub api_base: String,
@@ -17,7 +18,7 @@ pub struct ExchangeInfo {
     pub available_symbols: HashSet<String>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]  // Added Serialize trait
 pub enum SymbolFormat {
     Dash,      // BTC-USD
     Underscore, // BTC_USD  
@@ -91,7 +92,7 @@ impl ExchangeDiscovery {
         ];
 
         for (name, base_url, symbols_endpoint, ticker_endpoint, symbol_format) in known_exchanges {
-            match self.fetch_exchange_symbols(name, base_url, symbols_endpoint, ticker_endpoint, symbol_format).await {
+            match self.fetch_exchange_symbols(name, base_url, symbols_endpoint, ticker_endpoint, &symbol_format).await {  // Pass by reference
                 Ok(symbols) => {
                     info!("✅ {}: {} symbols discovered", name.to_uppercase(), symbols.len());
                     
@@ -100,7 +101,7 @@ impl ExchangeDiscovery {
                         api_base: base_url.to_string(),
                         symbols_endpoint: symbols_endpoint.to_string(),
                         ticker_endpoint: ticker_endpoint.to_string(),
-                        symbol_format,
+                        symbol_format,  // Move the value here
                         rate_limit_ms: 200, // Conservative rate limiting
                         is_us_legal: true,
                         available_symbols: symbols,
@@ -122,7 +123,7 @@ impl ExchangeDiscovery {
     }
 
     async fn fetch_exchange_symbols(&self, name: &str, base_url: &str, symbols_endpoint: &str, 
-                                   _ticker_endpoint: &str, _symbol_format: SymbolFormat) -> Result<HashSet<String>> {
+                                   _ticker_endpoint: &str, _symbol_format: &SymbolFormat) -> Result<HashSet<String>> {  // Take by reference
         let mut symbols = HashSet::new();
         let url = format!("{}{}", base_url, symbols_endpoint);
         
@@ -255,6 +256,7 @@ impl ExchangeDiscovery {
         &self.us_legal_exchanges
     }
 
+    #[allow(dead_code)]
     pub fn get_symbols_for_exchange(&self, exchange_name: &str) -> Option<&HashSet<String>> {
         self.us_legal_exchanges
             .iter()

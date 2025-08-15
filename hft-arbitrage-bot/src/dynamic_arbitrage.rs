@@ -4,15 +4,17 @@ use reqwest::Client;
 use serde_json::Value;
 use std::collections::HashMap;
 use tokio::time::{sleep, Duration};
-use tracing::{info, warn, debug};
+use tracing::{info, debug};
 
 #[derive(Debug, Clone)]
 pub struct LivePrice {
     pub exchange: String,
+    #[allow(dead_code)]
     pub symbol: String,
     pub bid: f64,
     pub ask: f64,
     pub volume: f64,
+    #[allow(dead_code)]
     pub timestamp: chrono::DateTime<chrono::Utc>,
 }
 
@@ -188,7 +190,7 @@ impl DynamicArbitrageScanner {
             let mut prices_for_symbol = Vec::new();
             
             // Collect all prices for this symbol
-            for (exchange_name, exchange_prices) in &self.price_cache {
+            for (_exchange_name, exchange_prices) in &self.price_cache {  // Prefix with underscore to indicate intentional non-use
                 if let Some(price) = exchange_prices.get(symbol) {
                     if price.bid > 0.0 && price.ask > 0.0 && price.volume * price.ask >= self.min_volume_usd {
                         prices_for_symbol.push(price);
