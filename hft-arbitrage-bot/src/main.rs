@@ -288,3 +288,8 @@ async fn main() -> Result<()> {
     info!("👋 Cross-chain arbitrage system stopped");
     Ok(())
 }
+
+mod blockchain;
+mod ml_engine;
+mod mev_protection;
+mod cross_chain;

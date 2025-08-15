@@ -84,3 +84,38 @@ mainnet = ["layerzero-sdk"]
 
 [dev-dependencies]
 tokio-test = "0.4"
+
+# Blockchain dependencies
+ethers = { version = "2.0", features = ["ws", "rustls"] }
+ethers-contract = "2.0"
+web3 = "0.19"
+async-trait = "0.1"
+hex = "0.4"
+
+# ML Dependencies
+candle-core = "0.3"
+candle-nn = "0.3"
+candle-transformers = "0.3"
+tokenizers = "0.15"
+safetensors = "0.4"
+tch = "0.15"  # PyTorch bindings for Rust
+
+# Blockchain dependencies
+ethers-contract = "2.0"
+web3 = "0.19"
+async-trait = "0.1"
+hex = "0.4"
+secp256k1 = "0.27"
+k256 = "0.13"
+sha3 = "0.10"
+rlp = "0.5"
+
+# ML Dependencies
+candle-core = "0.3"
+candle-nn = "0.3"
+candle-transformers = "0.3"
+tokenizers = "0.15"
+safetensors = "0.4"
+tch = "0.15"  # PyTorch bindings for Rust
+ort = "1.16"  # ONNX Runtime
+rand = "0.8"

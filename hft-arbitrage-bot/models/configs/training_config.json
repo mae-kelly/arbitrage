@@ -1,0 +1,26 @@
+{
+  "price_prediction": {
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "epochs": 50,
+    "hidden_dim": 256,
+    "num_layers": 6,
+    "num_heads": 8,
+    "dropout": 0.1,
+    "sequence_length": 100
+  },
+  "opportunity_scoring": {
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "hidden_dim": 128,
+    "dropout": 0.2
+  },
+  "risk_assessment": {
+    "batch_size": 32,
+    "learning_rate": 0.0005,
+    "epochs": 75,
+    "ensemble_size": 5,
+    "hidden_dim": 64
+  }
+}

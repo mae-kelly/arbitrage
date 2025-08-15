@@ -1,0 +1,5 @@
+# Ultra minimal - only absolute essentials for basic functionality
+requests
+aiohttp
+fastapi
+uvicorn[standard]
