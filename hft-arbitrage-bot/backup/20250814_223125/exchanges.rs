@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use serde_json::Value;
 use std::collections::{HashMap, HashSet};
 use tokio::time::{sleep, Duration};
-use tracing::{info, warn};
+use tracing::{info, warn, error};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]  // Added Serialize trait
 pub struct ExchangeInfo {
@@ -256,7 +256,6 @@ impl ExchangeDiscovery {
         &self.us_legal_exchanges
     }
 
-    #[allow(dead_code)]
     pub fn get_symbols_for_exchange(&self, exchange_name: &str) -> Option<&HashSet<String>> {
         self.us_legal_exchanges
             .iter()
@@ -280,7 +279,6 @@ impl ExchangeDiscovery {
             .collect()
     }
 
-    #[allow(dead_code)]
     pub async fn save_discovery_results(&self, filename: &str) -> Result<()> {
         let json_data = serde_json::to_string_pretty(&self.us_legal_exchanges)?;
         tokio::fs::write(filename, json_data).await?;

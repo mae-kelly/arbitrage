@@ -280,7 +280,6 @@ impl ExchangeDiscovery {
             .collect()
     }
 
-    #[allow(dead_code)]
     pub async fn save_discovery_results(&self, filename: &str) -> Result<()> {
         let json_data = serde_json::to_string_pretty(&self.us_legal_exchanges)?;
         tokio::fs::write(filename, json_data).await?;

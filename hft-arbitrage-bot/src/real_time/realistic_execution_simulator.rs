@@ -1,20 +1,3 @@
-#!/bin/bash
-# Create execution simulator that uses REAL market prices
-
-set -e
-
-echo "🎭 CREATING REAL-PRICE EXECUTION SIMULATOR"
-echo "=========================================="
-echo "🎯 Uses REAL market data for simulation:"
-echo "   ✅ LIVE prices from actual exchanges"
-echo "   ✅ REAL order book liquidity constraints"
-echo "   ✅ REAL gas prices and network congestion"
-echo "   ✅ REAL exchange fees and spreads"
-echo "   🎭 Simulated execution with realistic outcomes"
-echo ""
-
-# Create the realistic execution simulator that uses live data
-cat > src/real_time/realistic_execution_simulator.rs << 'SIM_EOF'
 //! Realistic Execution Simulator using REAL market data
 //! Simulates trade execution using actual live prices and market conditions
 
@@ -497,4 +480,3 @@ pub struct SimulationStatistics {
     pub total_mev_impact_usd: f64,
     pub average_execution_time_ms: u64,
 }
-SIM_EOF

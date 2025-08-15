@@ -1,6 +1,7 @@
 use tokio::task::JoinSet;
 use reqwest::Client;
 use std::time::Duration;
+use rayon::prelude::*;
 
 pub struct MassiveFetcher {
     client: Client,
@@ -123,25 +124,24 @@ impl MassiveFetcher {
     }
 
     pub fn find_flash_loan_opportunities(&self, prices: &[(String, String, f64, f64)]) -> Vec<String> {
-        let mut opportunities = Vec::new();
-        
-        for (exchange, coin, _bid, ask) in prices {
-            // Find arbitrage opportunities that justify flash loans
-            for (other_exchange, other_coin, other_bid, _other_ask) in prices {
-                if exchange != other_exchange && coin == other_coin {
-                    if other_bid > ask && *ask > 0.0 {
-                        let profit_pct = ((other_bid - ask) / ask) * 100.0;
-                        if profit_pct > 0.1 { // >0.1% for flash loan profitability
-                            opportunities.push(format!(
-                                "FLASH LOAN: {} | Buy {} @ ${:.2} -> Sell {} @ ${:.2} = {:.3}% profit",
-                                coin, exchange, ask, other_exchange, other_bid, profit_pct
-                            ));
+        prices.par_iter()
+            .filter_map(|(exchange, coin, bid, ask)| {
+                // Find arbitrage opportunities that justify flash loans
+                for (other_exchange, other_coin, other_bid, other_ask) in prices {
+                    if exchange != other_exchange && coin == other_coin {
+                        if other_bid > ask && ask > &0.0 {
+                            let profit_pct = ((other_bid - ask) / ask) * 100.0;
+                            if profit_pct > 0.1 { // >0.1% for flash loan profitability
+                                return Some(format!(
+                                    "FLASH LOAN: {} | Buy {} @ ${:.2} -> Sell {} @ ${:.2} = {:.3}% profit",
+                                    coin, exchange, ask, other_exchange, other_bid, profit_pct
+                                ));
+                            }
                         }
                     }
                 }
-            }
-        }
-        
-        opportunities
+                None
+            })
+            .collect()
     }
 }

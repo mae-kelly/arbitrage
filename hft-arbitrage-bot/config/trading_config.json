@@ -1,0 +1,26 @@
+{
+  "api_keys": {
+    "coinbase": {
+      "api_key": "",
+      "secret_key": "",
+      "passphrase": "",
+      "sandbox": true
+    },
+    "kraken": {
+      "api_key": "",
+      "secret_key": "",
+      "sandbox": true
+    },
+    "kucoin": {
+      "api_key": "",
+      "secret_key": "",
+      "passphrase": "",
+      "sandbox": true
+    }
+  },
+  "trading_enabled": false,
+  "max_position_size_usd": 1000.0,
+  "min_profit_threshold_bps": 50,
+  "max_slippage_bps": 10,
+  "risk_per_trade_percent": 1.0
+}
