@@ -1,0 +1,82 @@
+# Default values for arbitrage-bot
+replicaCount: 3
+
+image:
+  repository: arbitrage-bot
+  pullPolicy: Always
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+  requests:
+    cpu: 2000m
+    memory: 4Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - arbitrage-bot
+        topologyKey: kubernetes.io/hostname
+
+config:
+  scanIntervalSeconds: 1
+  riskLimits:
+    maxPositionUsd: 100000.0
+    maxDailyVolumeUsd: 1000000.0
+
+postgres:
+  enabled: true
+  persistence:
+    size: 50Gi
+
+redis:
+  enabled: true
+  persistence:
+    size: 10Gi

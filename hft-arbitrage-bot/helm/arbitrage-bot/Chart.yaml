@@ -1,0 +1,11 @@
+apiVersion: v2
+name: arbitrage-bot
+description: Production Arbitrage Trading System
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+- trading
+- arbitrage
+- defi
+- blockchain

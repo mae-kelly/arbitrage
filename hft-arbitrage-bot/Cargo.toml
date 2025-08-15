@@ -119,3 +119,20 @@ safetensors = "0.4"
 tch = "0.15"  # PyTorch bindings for Rust
 ort = "1.16"  # ONNX Runtime
 rand = "0.8"
+
+# Database dependencies
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
+redis = { version = "0.23", features = ["tokio-comp", "connection-manager"] }
+
+# Performance optimization dependencies
+[target.'cfg(target_os = "macos")'.dependencies]
+metal = "0.24"
+objc = "0.2"
+
+# SIMD and low-level optimization
+[dependencies.libc]
+version = "0.2"
+
+# Additional performance deps
+num_cpus = "1.16"
+rayon = "1.7"
