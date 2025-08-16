@@ -1,6 +1,6 @@
 [package]
 name = "hft-arbitrage-bot"
-version = "5.0.0"
+version = "4.0.0"  # Matching Cargo.lock
 edition = "2021"
 description = "Cross-Chain High-Frequency Arbitrage Bot (Educational)"
 
@@ -9,136 +9,127 @@ name = "hft-arbitrage-bot"
 path = "src/main.rs"
 
 [dependencies]
-# Core async runtime
-tokio = { version = "1.0", features = ["full"] }
-futures = "0.3"
-futures-util = "0.3"
-
-# Error handling
+# Core dependencies (from Cargo.lock - these work together)
 anyhow = "1.0"
-thiserror = "1.0"
-
-# Serialization
+chrono = { version = "0.4", features = ["serde"] }
+dashmap = "5.5"
+futures-util = "0.3"
+parking_lot = "0.12"
+rand = "0.8"
+rayon = "1.11"
+reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-
-# Logging
+tokio = { version = "1.47", features = ["full"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
-# HTTP client
-reqwest = { version = "0.11", features = ["json", "stream"] }
-
-# WebSocket
-tokio-tungstenite = "0.20"
-
-# Time handling
-chrono = { version = "0.4", features = ["serde"] }
-
-# Concurrent data structures
-dashmap = "5.0"
-parking_lot = "0.12"
-
-# Random number generation
-rand = "0.8"
+# Additional core dependencies
+thiserror = "1.0"
+uuid = { version = "1.0", features = ["v4"] }
+async-trait = "0.1"
+hex = "0.4"
+num_cpus = "1.16"
+url = "2.4"
 
 # Math and statistics
-statrs = "0.16"
+nalgebra = { version = "0.32", optional = true }
+rand_distr = { version = "0.4", optional = true }
 
-# Database (for historical data)
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid"] }
+# WebSocket support for real-time data
+tokio-tungstenite = { version = "0.20", optional = true }
 
-# Ethereum and EVM chains
-ethers = { version = "2.0", features = ["ws", "rustls", "abigen"] }
-ethers-providers = "2.0"
-ethers-signers = "2.0"
-ethers-contract = "2.0"
-
-# Solana
-solana-client = "1.16"
-solana-sdk = "1.16"
-anchor-client = "0.28"
-
-# Cross-chain protocols
-# Note: These are placeholder dependencies - real implementations would use official SDKs
-layerzero-sdk = { git = "https://github.com/LayerZero-Labs/LayerZero", optional = true }
-
-# Configuration
-config = "0.13"
-toml = "0.8"
-
-# Metrics and monitoring
-prometheus = "0.13"
-metrics = "0.21"
-
-# Command line interface
+# Configuration management
+config = { version = "0.13", optional = true }
+toml = { version = "0.8", optional = true }
 clap = { version = "4.0", features = ["derive"] }
 
-# UUID generation
-uuid = { version = "1.0", features = ["v4"] }
+# Database support
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite", "chrono", "uuid"], optional = true }
+
+# Metrics and monitoring
+prometheus = { version = "0.13", optional = true }
+
+# Basic crypto utilities
+sha2 = { version = "0.10", optional = true }
+base64 = { version = "0.21", optional = true }
+
+# Blockchain dependencies (compatible versions)
+# Using ethers-rs v1.0 which has better compatibility
+ethers = { version = "1.0", features = ["ws", "rustls"], optional = true }
+ethers-core = { version = "1.0", optional = true }
+ethers-providers = { version = "1.0", optional = true }
+ethers-signers = { version = "1.0", optional = true }
+ethers-contract = { version = "1.0", optional = true }
+ethers-middleware = { version = "1.0", optional = true }
+
+# Alternative web3 client
+web3 = { version = "0.19", optional = true }
+
+# Crypto primitives (compatible versions)
+secp256k1 = { version = "0.24", optional = true }
+k256 = { version = "0.11", optional = true }
+sha3 = { version = "0.10", optional = true }
+rlp = { version = "0.5", optional = true }
+
+# Additional blockchain utilities
+tiny-keccak = { version = "2.0", features = ["keccak"], optional = true }
+ethereum-types = { version = "0.13", optional = true }
+
+# Solana (using older compatible versions)
+solana-client = { version = "1.14", optional = true }
+solana-sdk = { version = "1.14", optional = true }
+spl-token = { version = "3.5", optional = true }
+
+# Additional async utilities
+futures = { version = "0.3", optional = true }
 
 [features]
 default = ["simulation"]
 simulation = []
-mainnet = ["layerzero-sdk"]
+math = ["nalgebra", "rand_distr"]
+websockets = ["tokio-tungstenite"]
+configuration = ["config", "toml"]
+database = ["sqlx"]
+monitoring = ["prometheus"]
+crypto = ["sha2", "base64"]
+
+# Blockchain features
+ethereum = [
+    "ethers", 
+    "ethers-core", 
+    "ethers-providers", 
+    "ethers-signers", 
+    "ethers-contract", 
+    "ethers-middleware",
+    "secp256k1", 
+    "k256", 
+    "sha3", 
+    "rlp",
+    "tiny-keccak",
+    "ethereum-types",
+    "futures"
+]
+
+web3-client = ["web3", "ethereum-types", "secp256k1"]
+
+solana = ["solana-client", "solana-sdk", "spl-token"]
+
+# Combined features
+blockchain = ["ethereum", "solana"]
+full = ["math", "websockets", "configuration", "database", "monitoring", "crypto", "blockchain"]
 
 [dev-dependencies]
 tokio-test = "0.4"
 
-# Blockchain dependencies
-ethers = { version = "2.0", features = ["ws", "rustls"] }
-ethers-contract = "2.0"
-web3 = "0.19"
-async-trait = "0.1"
-hex = "0.4"
+[profile.release]
+# Optimization for high-frequency trading
+lto = true
+codegen-units = 1
+panic = "abort"
+opt-level = 3
 
-# ML Dependencies
-candle-core = "0.3"
-candle-nn = "0.3"
-candle-transformers = "0.3"
-tokenizers = "0.15"
-safetensors = "0.4"
-tch = "0.15"  # PyTorch bindings for Rust
-
-# Blockchain dependencies
-ethers-contract = "2.0"
-web3 = "0.19"
-async-trait = "0.1"
-hex = "0.4"
-secp256k1 = "0.27"
-k256 = "0.13"
-sha3 = "0.10"
-rlp = "0.5"
-
-# ML Dependencies
-candle-core = "0.3"
-candle-nn = "0.3"
-candle-transformers = "0.3"
-tokenizers = "0.15"
-safetensors = "0.4"
-tch = "0.15"  # PyTorch bindings for Rust
-ort = "1.16"  # ONNX Runtime
-rand = "0.8"
-
-# Database dependencies
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
-redis = { version = "0.23", features = ["tokio-comp", "connection-manager"] }
-
-# Performance optimization dependencies
-[target.'cfg(target_os = "macos")'.dependencies]
-metal = "0.24"
-objc = "0.2"
-
-# SIMD and low-level optimization
-[dependencies.libc]
-version = "0.2"
-
-# Additional performance deps
-num_cpus = "1.16"
-rayon = "1.7"
-
-# Additional production dependencies
-nalgebra = "0.32"
-rand_distr = "0.4"
-uuid = { version = "1.0", features = ["v4"] }
-async-trait = "0.1"
+[profile.dev]
+# Faster compile times during development
+opt-level = 0
+debug = true

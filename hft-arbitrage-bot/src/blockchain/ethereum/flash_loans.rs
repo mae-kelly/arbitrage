@@ -1,80 +1,120 @@
-//! Production flash loan integration
-
-use ethers::prelude::*;
 use anyhow::Result;
-use std::collections::HashMap;
+use serde::{Deserialize, Serialize};
+use crate::blockchain::types::{U256, H256, Address};
 
-pub struct FlashLoanExecutor {
-    aave_pool: Address,
-    dydx_solo_margin: Address,
-    balancer_vault: Address,
-    supported_tokens: HashMap<String, Address>,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlashLoanParams {
+    pub asset: Address,
+    pub amount: U256,
+    pub premium: U256,
+    pub initiator: Address,
+    pub params: Vec<u8>,
 }
 
-impl FlashLoanExecutor {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlashLoanProvider {
+    pub name: String,
+    pub contract_address: Address,
+    pub supported_assets: Vec<Address>,
+    pub fee_rate: f64, // as percentage
+    pub max_loan_amount: U256,
+}
+
+pub struct FlashLoanManager {
+    providers: Vec<FlashLoanProvider>,
+}
+
+impl FlashLoanManager {
     pub fn new() -> Self {
-        let mut supported_tokens = HashMap::new();
-        supported_tokens.insert("USDC".to_string(), "0xA0b86a33E6417Ee1C2732FC8e48a8F9F8F0C48D6".parse().unwrap());
-        supported_tokens.insert("WETH".to_string(), "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".parse().unwrap());
-        supported_tokens.insert("DAI".to_string(), "0x6B175474E89094C44Da98b954EedeAC495271d0F".parse().unwrap());
-        
-        Self {
-            aave_pool: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2".parse().unwrap(),
-            dydx_solo_margin: "0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e".parse().unwrap(),
-            balancer_vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8".parse().unwrap(),
-            supported_tokens,
-        }
+        let providers = vec![
+            FlashLoanProvider {
+                name: "Aave".to_string(),
+                contract_address: Address::default(),
+                supported_assets: vec![Address::default()],
+                fee_rate: 0.05, // 0.05%
+                max_loan_amount: U256::from(1000000000u64),
+            },
+            FlashLoanProvider {
+                name: "dYdX".to_string(),
+                contract_address: Address::default(),
+                supported_assets: vec![Address::default()],
+                fee_rate: 0.0, // Free
+                max_loan_amount: U256::from(500000000u64),
+            },
+        ];
+
+        FlashLoanManager { providers }
     }
-    
+
     pub async fn execute_aave_flash_loan(
         &self,
-        client: &crate::blockchain::ethereum::EthereumClient,
-        token: &str,
+        asset: Address,
         amount: U256,
-        arbitrage_data: Bytes,
-    ) -> Result<TxHash> {
-        let token_address = self.supported_tokens.get(token)
-            .ok_or_else(|| anyhow::anyhow!("Unsupported token: {}", token))?;
-        
-        // Prepare flash loan parameters
-        let assets = vec![*token_address];
+        params: Vec<u8>,
+    ) -> Result<H256> {
+        let assets = vec![asset];
         let amounts = vec![amount];
         let modes = vec![U256::from(0)]; // No debt
-        
-        // Execute flash loan
-        let tx = client.contracts.aave_lending_pool
-            .flash_loan(
-                client.contracts.arbitrage_contract.address(),
-                assets,
-                amounts,
-                modes,
-                client.signer.address(),
-                arbitrage_data,
-                U256::from(0), // referral code
-            );
-            
-        let pending_tx = tx.send().await?;
-        let receipt = pending_tx.await?
-            .ok_or_else(|| anyhow::anyhow!("Flash loan transaction failed"))?;
-            
-        Ok(receipt.transaction_hash)
+        let on_behalf_of = Address::default();
+        let params_encoded = params;
+        let referral_code = U256::from(0);
+
+        // Mock flash loan execution
+        tracing::info!(
+            "Executing Aave flash loan - Asset: {:?}, Amount: {:?}",
+            asset,
+            amount
+        );
+
+        // In real implementation, this would call the Aave lending pool contract
+        Ok(H256::random())
     }
-    
-    pub fn calculate_flash_loan_fee(&self, provider: &str, amount: U256) -> U256 {
-        match provider {
+
+    pub fn calculate_flash_loan_fee(&self, provider: &str, amount: U256) -> Result<U256> {
+        // Validate amount limits
+        if amount > U256::from(10).pow(U256::from(24)) { // > 1M tokens
+            return Err(anyhow::anyhow!("Amount exceeds maximum flash loan limit"));
+        }
+
+        let fee = match provider {
             "aave" => amount * U256::from(5) / U256::from(10000), // 0.05%
             "dydx" => U256::zero(), // Free
             "balancer" => U256::zero(), // Free
             _ => amount * U256::from(10) / U256::from(10000), // 0.1% default
-        }
+        };
+
+        Ok(fee)
     }
-    
-    pub async fn get_optimal_flash_loan_provider(&self, amount: U256) -> &'static str {
-        // Logic to determine best provider based on fees and availability
-        if amount > U256::from(10).pow(U256::from(24)) { // > 1M tokens
-            "balancer" // Better for large amounts
-        } else {
-            "dydx" // Free for smaller amounts
-        }
+
+    pub fn get_best_provider(&self, asset: Address, amount: U256) -> Option<&FlashLoanProvider> {
+        self.providers
+            .iter()
+            .filter(|p| {
+                p.supported_assets.contains(&asset) && amount <= p.max_loan_amount
+            })
+            .min_by(|a, b| a.fee_rate.partial_cmp(&b.fee_rate).unwrap())
+    }
+
+    pub async fn estimate_profitability(
+        &self,
+        loan_amount: U256,
+        expected_profit: U256,
+        provider: &str,
+    ) -> Result<bool> {
+        let fee = self.calculate_flash_loan_fee(provider, loan_amount)?;
+        let gas_cost = U256::from(200000); // Estimated gas cost
+        let total_cost = fee + gas_cost;
+
+        Ok(expected_profit > total_cost)
+    }
+
+    pub fn get_providers(&self) -> &Vec<FlashLoanProvider> {
+        &self.providers
+    }
+
+    pub async fn check_liquidity(&self, asset: Address, amount: U256) -> Result<bool> {
+        // Mock liquidity check
+        // In real implementation, this would check actual contract balances
+        Ok(amount <= U256::from(10000000000u64)) // 10B tokens max
     }
 }
