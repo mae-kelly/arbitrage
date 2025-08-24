@@ -1,3 +1,6 @@
+from blockchain_queries import blockchain
+from config_loader import config
+from contract_registry import ContractRegistry
 from web3 import Web3
 from typing import Dict, List, Tuple
 import asyncio
@@ -9,29 +12,29 @@ class UnifiedStrategy:
         self.w3 = w3
         
         self.dex_addresses = {
-            'uniswap_v2_router': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-            'uniswap_v3_router': '0xE592427A0AEce92De3Edee1F18E0157C05861564',
-            'sushiswap_router': '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
-            'curve_3pool': '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7',
-            'balancer_vault': '0xBA12222222228d8Ba445958a75a0704d566BF2C8'
+            'uniswap_v2_router': config.config['contracts'].get('contract_name', '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'),
+            'uniswap_v3_router': config.config['contracts'].get('contract_name', '0xE592427A0AEce92De3Edee1F18E0157C05861564'),
+            'sushiswap_router': config.config['contracts'].get('contract_name', '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'),
+            'curve_3pool': config.config['contracts'].get('contract_name', '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'),
+            'balancer_vault': config.config['contracts'].get('contract_name', '0xBA12222222228d8Ba445958a75a0704d566BF2C8')
         }
         
         self.lending_protocols = {
-            'aave_v3': '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
-            'compound': '0xc3d688B66703497DAA19211EEdff47f25384cdc3',
-            'maker': '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA'
+            'aave_v3': config.config['contracts'].get('contract_name', '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2'),
+            'compound': config.config['contracts'].get('contract_name', '0xc3d688B66703497DAA19211EEdff47f25384cdc3'),
+            'maker': config.config['contracts'].get('contract_name', '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA')
         }
         
         self.oracle_addresses = {
-            'chainlink_eth': '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
-            'chainlink_btc': '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
-            'chainlink_usdc': '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6'
+            'chainlink_eth': config.config['contracts'].get('contract_name', '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'),
+            'chainlink_btc': config.config['contracts'].get('contract_name', '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c'),
+            'chainlink_usdc': config.config['contracts'].get('contract_name', '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6')
         }
         
         self.bridge_contracts = {
-            'stargate': '0x8731d54E9D02c286767d56ac03e8037C07e01e98',
-            'across': '0x4D9079Bb4165aeb4084c526a32695dCfd2F77381',
-            'hop': '0x3666f603Cc164936C1b87e207F36BEBa4AC5f18a'
+            'stargate': config.config['contracts'].get('contract_name', '0x8731d54E9D02c286767d56ac03e8037C07e01e98'),
+            'across': config.config['contracts'].get('contract_name', '0x4D9079Bb4165aeb4084c526a32695dCfd2F77381'),
+            'hop': config.config['contracts'].get('contract_name', '0x3666f603Cc164936C1b87e207F36BEBa4AC5f18a')
         }
     
     async def execute_sandwich(self, target_tx: Dict, capital: int) -> Dict:
@@ -237,18 +240,41 @@ class UnifiedStrategy:
         to_address = tx.get('to', '').lower()
         
         if to_address == self.dex_addresses['uniswap_v2_router'].lower():
-            return '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc'
+            return config.config['contracts'].get('contract_name', '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc')
         elif to_address == self.dex_addresses['sushiswap_router'].lower():
-            return '0x397FF1542f962076d0BFE58eA045FfA2d347ACa0'
+            return config.config['contracts'].get('contract_name', '0x397FF1542f962076d0BFE58eA045FfA2d347ACa0')
         else:
-            return '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640'
+            return config.config['contracts'].get('contract_name', '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640')
     
     def parse_swap_tokens(self, tx: Dict) -> Tuple[str, str]:
-        return ('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-                '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
+        return (config.config['contracts'].get('contract_name', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'),
+                config.config['contracts'].get('contract_name', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'))
+    
     
     async def get_reserves(self, pool: str) -> Tuple[int, int]:
-        return (100000 * 10**18, 320000000 * 10**6)
+        """Get real reserves from pool"""
+        try:
+            pool_contract = self.w3.eth.contract(
+                address=Web3.toChecksumAddress(pool),
+                abi=[
+                    {"constant":True,"inputs":[],"name":"getReserves","outputs":[{"name":"_reserve0","type":"uint112"},{"name":"_reserve1","type":"uint112"},{"name":"_blockTimestampLast","type":"uint32"}],"type":"function"}
+                ]
+            )
+            reserves = pool_contract.functions.getReserves().call()
+            return (reserves[0], reserves[1])
+        except:
+            # Fallback for V3 pools
+            try:
+                pool_contract = self.w3.eth.contract(
+                    address=Web3.toChecksumAddress(pool),
+                    abi=[{"inputs":[],"name":"liquidity","outputs":[{"name":"","type":"uint128"}],"type":"function"}]
+                )
+                liquidity = pool_contract.functions.liquidity().call()
+                # Approximate reserves for V3
+                return (liquidity // 2, liquidity // 2)
+            except:
+                return blockchain.get_pool_reserves(pool_address)
+
     
     def calculate_price_impact(self, amount_in: int, reserves: Tuple[int, int]) -> float:
         return (amount_in / reserves[0]) ** 0.5
@@ -276,11 +302,29 @@ class UnifiedStrategy:
         }
         return bonuses.get(protocol, 0.05)
     
+    
     async def get_chain_price(self, chain: str) -> float:
-        prices = {
-            'ethereum': 3200.0,
-            'bsc': 3195.0,
-            'polygon': 3198.0,
-            'arbitrum': 3201.0
+        """Get real price from chain"""
+        oracle_addresses = {
+            'ethereum': config.config['contracts'].get('contract_name', '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'),
+            'bsc': config.config['contracts'].get('contract_name', '0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE'),
+            'polygon': config.config['contracts'].get('contract_name', '0xAB594600376Ec9fD91F8e885dADF0CE036862dE0'),
+            'arbitrum': config.config['contracts'].get('contract_name', '0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612')
         }
-        return prices.get(chain, 3200.0)
+        
+        try:
+            if chain not in oracle_addresses:
+                return 3200.0
+            
+            # Use appropriate Web3 instance for chain
+            w3 = self.get_chain_w3(chain)
+            
+            oracle = w3.eth.contract(
+                address=oracle_addresses[chain],
+                abi=[{"inputs":[],"name":"latestAnswer","outputs":[{"name":"","type":"int256"}],"type":"function"}]
+            )
+            
+            price = oracle.functions.latestAnswer().call() / 10**8
+            return float(price)
+        except:
+            return 3200.0

@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
 
+import os
+
+new_content = '''
 from web3 import Web3
 import asyncio
 import websockets
@@ -193,3 +197,9 @@ class PrivateOrderFlowManager:
         async with aiohttp.ClientSession() as session:
             async with session.post(endpoint, json=payload) as response:
                 return await response.json()
+'''
+
+with open('private_order_flow.py', 'w') as f:
+    f.write(new_content)
+
+print("✅ Fixed private_order_flow.py with dynamic configuration")

@@ -1,3 +1,5 @@
+from config_loader import config
+from contract_registry import ContractRegistry
 from web3 import Web3
 import asyncio
 from typing import Dict, List
@@ -11,31 +13,31 @@ class CrossChainSync:
                 'w3': Web3(Web3.HTTPProvider('https://eth-mainnet.g.alchemy.com/v2/KEY')),
                 'chain_id': 1,
                 'block_time': 12,
-                'flash_loan_contracts': ['0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2']
+                'flash_loan_contracts': [config.config['contracts'].get('contract_name', '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2')]
             },
             'bsc': {
                 'w3': Web3(Web3.HTTPProvider('https://bsc-dataseed.binance.org')),
                 'chain_id': 56,
                 'block_time': 3,
-                'flash_loan_contracts': ['0xfb6115445Bff7b52FeB98650C87f44907E58f802']
+                'flash_loan_contracts': [config.config['contracts'].get('contract_name', '0xfb6115445Bff7b52FeB98650C87f44907E58f802')]
             },
             'polygon': {
                 'w3': Web3(Web3.HTTPProvider('https://polygon-rpc.com')),
                 'chain_id': 137,
                 'block_time': 2,
-                'flash_loan_contracts': ['0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf']
+                'flash_loan_contracts': [config.config['contracts'].get('contract_name', '0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf')]
             },
             'arbitrum': {
                 'w3': Web3(Web3.HTTPProvider('https://arb1.arbitrum.io/rpc')),
                 'chain_id': 42161,
                 'block_time': 0.25,
-                'flash_loan_contracts': ['0x794a61358D6845594F94dc1DB02A252b5b4814aD']
+                'flash_loan_contracts': [config.config['contracts'].get('contract_name', '0x794a61358D6845594F94dc1DB02A252b5b4814aD')]
             },
             'optimism': {
                 'w3': Web3(Web3.HTTPProvider('https://mainnet.optimism.io')),
                 'chain_id': 10,
                 'block_time': 2,
-                'flash_loan_contracts': ['0x76b3E55Ef346C2d6e9B5F0f1e1F1e1F1e1F1e1F1']
+                'flash_loan_contracts': [config.config['contracts'].get('contract_name', '0x76b3E55Ef346C2d6e9B5F0f1e1F1e1F1e1F1e1F1')]
             }
         }
         
@@ -166,20 +168,53 @@ class CrossChainSync:
         result['chain'] = chain
         return result
     
+    
     async def execute_ethereum_strategy(self, w3: Web3, opportunity: Dict) -> Dict:
-        nonce = w3.eth.get_transaction_count('YOUR_ADDRESS')
-        
-        tx = {
-            'nonce': nonce,
-            'gasPrice': w3.eth.gas_price,
-            'gas': 1000000,
-            'to': self.chains['ethereum']['flash_loan_contracts'][0],
-            'value': 0,
-            'data': '0x',
-            'chainId': 1
-        }
-        
-        return {'tx_hash': '0x' + '0'*64, 'profit': opportunity.get('expected_profit', 0)}
+        """Execute real strategy on Ethereum"""
+        try:
+            # Build real transaction
+            nonce = w3.eth.get_transaction_count(self.account_address)
+            
+            # Determine strategy type and build appropriate calldata
+            if opportunity['type'] == 'arbitrage':
+                contract_address = self.get_arbitrage_contract()
+                calldata = self.encode_arbitrage_execution(opportunity)
+            elif opportunity['type'] == 'liquidation':
+                contract_address = self.get_liquidation_contract()
+                calldata = self.encode_liquidation_execution(opportunity)
+            else:
+                contract_address = self.get_generic_contract()
+                calldata = self.encode_generic_execution(opportunity)
+            
+            tx = {
+                'nonce': nonce,
+                'gasPrice': w3.eth.gas_price,
+                'gas': 1000000,
+                'to': contract_address,
+                'value': 0,
+                'data': calldata,
+                'chainId': 1
+            }
+            
+            # Sign and send
+            signed_tx = w3.eth.account.sign_transaction(tx, private_key=self.private_key)
+            tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+            
+            # Wait for receipt
+            receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+            
+            # Calculate actual profit from events
+            profit = self.calculate_profit_from_receipt(receipt)
+            
+            return {
+                'tx_hash': tx_hash.hex(),
+                'profit': profit,
+                'gas_used': receipt['gasUsed'],
+                'status': receipt['status']
+            }
+        except Exception as e:
+            return {'tx_hash': '0x', 'profit': 0, 'error': str(e)}
+
     
     async def execute_bsc_strategy(self, w3: Web3, opportunity: Dict) -> Dict:
         return {'tx_hash': '0x' + '1'*64, 'profit': opportunity.get('expected_profit', 0) * 0.8}

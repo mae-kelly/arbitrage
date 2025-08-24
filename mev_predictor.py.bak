@@ -1,6 +1,3 @@
-from blockchain_queries import blockchain
-from config_loader import config
-from contract_registry import ContractRegistry
 import torch
 import torch.nn as nn
 import numpy as np
@@ -155,9 +152,9 @@ class MEVPredictor:
         opportunities = []
         
         dex_routers = {
-            config.config['contracts'].get('contract_name', '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'),
-            config.config['contracts'].get('contract_name', '0xE592427A0AEce92De3Edee1F18E0157C05861564'),
-            config.config['contracts'].get('contract_name', '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F')
+            '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+            '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+            '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
         }
         
         for tx in mempool_txs:
@@ -184,9 +181,9 @@ class MEVPredictor:
         opportunities = []
         
         lending_protocols = {
-            'aave': config.config['contracts'].get('contract_name', '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2'),
-            'compound': config.config['contracts'].get('contract_name', '0xc3d688B66703497DAA19211EEdff47f25384cdc3'),
-            'maker': config.config['contracts'].get('contract_name', '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA')
+            'aave': '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
+            'compound': '0xc3d688B66703497DAA19211EEdff47f25384cdc3',
+            'maker': '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA'
         }
         
         for protocol, address in lending_protocols.items():
@@ -216,9 +213,9 @@ class MEVPredictor:
         opportunities = []
         
         dex_pairs = [
-            {'dex': 'uniswap_v2', 'pool': config.config['contracts'].get('contract_name', '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc')},
-            {'dex': 'sushiswap', 'pool': config.config['contracts'].get('contract_name', '0x397FF1542f962076d0BFE58eA045FfA2d347ACa0')},
-            {'dex': 'uniswap_v3', 'pool': config.config['contracts'].get('contract_name', '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640')}
+            {'dex': 'uniswap_v2', 'pool': '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc'},
+            {'dex': 'sushiswap', 'pool': '0x397FF1542f962076d0BFE58eA045FfA2d347ACa0'},
+            {'dex': 'uniswap_v3', 'pool': '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640'}
         ]
         
         for i, dex1 in enumerate(dex_pairs):
@@ -246,8 +243,8 @@ class MEVPredictor:
         opportunities = []
         
         oracle_feeds = [
-            {'oracle': config.config['contracts'].get('contract_name', '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'), 'pair': 'ETH/USD'},
-            {'oracle': config.config['contracts'].get('contract_name', '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c'), 'pair': 'BTC/USD'}
+            {'oracle': '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419', 'pair': 'ETH/USD'},
+            {'oracle': '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c', 'pair': 'BTC/USD'}
         ]
         
         for feed in oracle_feeds:
@@ -332,7 +329,7 @@ class MEVPredictor:
                 'user': '0x' + ''.join(np.random.choice(list('0123456789abcdef'), 40)),
                 'collateral': 50000000 * 10**6,
                 'debt': 35000000 * 10**6,
-                'debt_asset': config.config['contracts'].get('contract_name', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'),
+                'debt_asset': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
                 'health_factor': 1.01 + np.random.random() * 0.1
             }
             for _ in range(np.random.randint(5, 20))
@@ -341,25 +338,7 @@ class MEVPredictor:
         return [p for p in mock_positions if p['health_factor'] < 1.1]
     
     async def get_pool_price(self, pool_address: str) -> float:
-        # Get real price from DEX
-        try:
-            pair_contract = self.w3.eth.contract(
-                address=Web3.toChecksumAddress(pool_address),
-                abi=[{"constant":True,"inputs":[],"name":"getReserves","outputs":[{"name":"_reserve0","type":"uint112"},{"name":"_reserve1","type":"uint112"},{"name":"_blockTimestampLast","type":"uint32"}],"type":"function"},
-                     {"constant":True,"inputs":[],"name":"token0","outputs":[{"name":"","type":"address"}],"type":"function"}]
-            )
-            reserves = pair_contract.functions.getReserves().call()
-            token0 = pair_contract.functions.token0().call()
-            
-            # Assuming WETH/USDC pair
-            weth = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-            if token0.lower() == weth.lower():
-                price = (reserves[1] / 10**6) / (reserves[0] / 10**18)
-            else:
-                price = (reserves[0] / 10**6) / (reserves[1] / 10**18)
-            return price
-        except:
-            return 3200.0
+        return 3200 + np.random.uniform(-50, 50)
     
     async def get_oracle_price(self, oracle_address: str) -> float:
         return 3200 + np.random.uniform(-30, 30)

@@ -1,3 +1,6 @@
+from blockchain_queries import blockchain
+from config_loader import config
+from contract_registry import ContractRegistry
 import torch
 import torch.nn as nn
 import numpy as np
@@ -75,25 +78,25 @@ class AdvancedLiquidationPredictor:
         
         self.protocol_configs = {
             'aave_v3': {
-                'address': '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
+                'address': config.config['contracts'].get('contract_name', '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2'),
                 'liquidation_threshold': 0.85,
                 'liquidation_bonus': 0.05,
                 'health_factor_threshold': 1.0
             },
             'compound_v3': {
-                'address': '0xc3d688B66703497DAA19211EEdff47f25384cdc3',
+                'address': config.config['contracts'].get('contract_name', '0xc3d688B66703497DAA19211EEdff47f25384cdc3'),
                 'liquidation_threshold': 0.83,
                 'liquidation_bonus': 0.08,
                 'health_factor_threshold': 1.0
             },
             'maker': {
-                'address': '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA',
+                'address': config.config['contracts'].get('contract_name', '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA'),
                 'liquidation_threshold': 0.77,
                 'liquidation_bonus': 0.13,
                 'health_factor_threshold': 1.0
             },
             'morpho': {
-                'address': '0x8888882f8f843896699869179fB6E4f7e3B58888',
+                'address': config.config['contracts'].get('contract_name', '0x8888882f8f843896699869179fB6E4f7e3B58888'),
                 'liquidation_threshold': 0.87,
                 'liquidation_bonus': 0.045,
                 'health_factor_threshold': 1.0
@@ -360,30 +363,81 @@ class AdvancedLiquidationPredictor:
             'id': f"aave_{user}_{int(time.time())}",
             'collateral': {
                 'amount': data[0],
-                'asset': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+                'asset': config.config['contracts'].get('contract_name', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'),
                 'value_usd': data[0] * 3200 / 10**18,
                 'liquidity': 100000000 * 10**18
             },
             'debt': {
                 'amount': data[1],
-                'asset': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+                'asset': config.config['contracts'].get('contract_name', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'),
                 'value_usd': data[1] / 10**6
             },
             'health_factor': data[5] / 10**18
         }
     
-    def get_asset_volatility(self, asset: str) -> float:
+    
+    async def get_real_asset_volatility(self, asset: str) -> float:
+        '''Calculate real volatility from price history'''
+        try:
+            # Get price oracle
+            oracle_address = {
+                config.config['contracts'].get('contract_name', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'): config.config['contracts'].get('contract_name', '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'),  # ETH/USD
+                config.config['contracts'].get('contract_name', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'): config.config['contracts'].get('contract_name', '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6'),  # USDC/USD
+                config.config['contracts'].get('contract_name', '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'): config.config['contracts'].get('contract_name', '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c'),  # BTC/USD
+            }.get(asset)
+            
+            if not oracle_address:
+                return 0.03  # Default volatility
+            
+            oracle = self.w3.eth.contract(
+                address=oracle_address,
+                abi=[{"inputs":[],"name":"latestRoundData","outputs":[{"name":"roundId","type":"uint80"},{"name":"answer","type":"int256"},{"name":"startedAt","type":"uint256"},{"name":"updatedAt","type":"uint256"},{"name":"answeredInRound","type":"uint80"}],"type":"function"},
+                     {"inputs":[{"name":"_roundId","type":"uint80"}],"name":"getRoundData","outputs":[{"name":"roundId","type":"uint80"},{"name":"answer","type":"int256"},{"name":"startedAt","type":"uint256"},{"name":"updatedAt","type":"uint256"},{"name":"answeredInRound","type":"uint80"}],"type":"function"}]
+            )
+            
+            # Get last 20 rounds of price data
+            latest_round = oracle.functions.latestRoundData().call()
+            current_round_id = latest_round[0]
+            
+            prices = []
+            for i in range(20):
+                try:
+                    round_data = oracle.functions.getRoundData(current_round_id - i).call()
+                    prices.append(round_data[1] / 10**8)
+                except:
+                    break
+            
+            if len(prices) < 2:
+                return 0.03
+            
+            # Calculate returns
+            returns = []
+            for i in range(1, len(prices)):
+                ret = (prices[i-1] - prices[i]) / prices[i]
+                returns.append(ret)
+            
+            # Calculate volatility (standard deviation of returns)
+            import numpy as np
+            volatility = np.std(returns) * np.sqrt(365)  # Annualized
+            
+            return min(max(volatility, 0.001), 0.5)  # Cap between 0.1% and 50%
+            
+        except Exception as e:
+            print(f"Error calculating volatility: {e}")
+            return 0.03
+    
+    def get_asset_volatility_old(self, asset: str) -> float:
         volatilities = {
-            '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2': 0.02,
-            '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 0.001,
-            '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': 0.025
+            config.config['contracts'].get('contract_name', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'): 0.02,
+            config.config['contracts'].get('contract_name', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'): 0.001,
+            config.config['contracts'].get('contract_name', '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'): 0.025
         }
         return volatilities.get(asset, 0.03)
     
     def get_price_history_features(self, asset: str) -> np.ndarray:
         features = np.zeros(20)
         
-        features[0] = 3200 if asset == '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' else 1
+        features[0] = 3200 if asset == config.config['contracts'].get('contract_name', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2') else 1
         features[1] = np.random.uniform(-0.05, 0.05)
         features[2] = np.random.uniform(-0.1, 0.1)
         features[3:20] = np.random.randn(17) * 0.01

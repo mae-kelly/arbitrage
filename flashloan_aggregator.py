@@ -1,76 +1,121 @@
+from blockchain_queries import blockchain
+from config_loader import config
+from contract_registry import ContractRegistry
 from web3 import Web3
 from typing import List, Dict
 import json
 
 class FlashLoanAggregator:
+    
+    async def get_real_protocol_limits(self):
+        """Get real-time liquidity from protocols"""
+        limits = {}
+        
+        # Aave V3 - Query actual reserves
+        for token_symbol, token_address in self.token_addresses.items():
+            try:
+                aave_pool = self.w3.eth.contract(
+                    address=self.protocols['aave_v3']['address'],
+                    abi=[{"inputs":[{"name":"asset","type":"address"}],"name":"getReserveData","outputs":[{"components":[{"name":"configuration","type":"uint256"},{"name":"liquidityIndex","type":"uint128"},{"name":"currentLiquidityRate","type":"uint128"},{"name":"variableBorrowIndex","type":"uint128"},{"name":"currentVariableBorrowRate","type":"uint128"},{"name":"currentStableBorrowRate","type":"uint128"},{"name":"lastUpdateTimestamp","type":"uint40"},{"name":"id","type":"uint16"},{"name":"aTokenAddress","type":"address"},{"name":"stableDebtTokenAddress","type":"address"},{"name":"variableDebtTokenAddress","type":"address"},{"name":"interestRateStrategyAddress","type":"address"},{"name":"accruedToTreasury","type":"uint128"},{"name":"unbacked","type":"uint128"},{"name":"isolationModeTotalDebt","type":"uint128"}],"name":"","type":"tuple"}],"stateMutability":"view","type":"function"}]
+                )
+                
+                # Get aToken balance for available liquidity
+                reserve_data = aave_pool.functions.getReserveData(token_address).call()
+                atoken_address = reserve_data[8]
+                
+                token_contract = self.w3.eth.contract(
+                    address=token_address,
+                    abi=[{"inputs":[{"name":"account","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"type":"function"}]
+                )
+                
+                available = token_contract.functions.balanceOf(atoken_address).call()
+                
+                if 'aave_v3' not in limits:
+                    limits['aave_v3'] = {}
+                limits['aave_v3'][token_symbol] = available
+                
+            except Exception as e:
+                print(f"Error getting {token_symbol} limit: {e}")
+                limits['aave_v3'][token_symbol] = 0
+        
+        # Balancer - Query vault balance
+        for token_symbol, token_address in self.token_addresses.items():
+            try:
+                token_contract = self.w3.eth.contract(
+                    address=token_address,
+                    abi=[{"inputs":[{"name":"account","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"type":"function"}]
+                )
+                
+                vault_balance = token_contract.functions.balanceOf(self.protocols['balancer']['address']).call()
+                
+                if 'balancer' not in limits:
+                    limits['balancer'] = {}
+                limits['balancer'][token_symbol] = vault_balance
+                
+            except:
+                limits['balancer'][token_symbol] = 0
+        
+        return limits
+    
     def __init__(self, w3):
+        self.w3 = w3
+        # Update protocol list with real values
+        self.update_protocol_limits()
+    
+    async def update_protocol_limits(self):
+        """Update limits with real-time data"""
+        real_limits = await self.get_real_protocol_limits()
+        for protocol_name, token_limits in real_limits.items():
+            if protocol_name in self.protocols:
+                self.protocols[protocol_name]['limits'] = token_limits
+
+    def __init_old__(self, w3):
         self.w3 = w3
         
         self.protocols = {
             'aave_v3': {
-                'address': '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
-                'limits': {
-                    'USDC': 387432981 * 10**6,
-                    'USDT': 156782234 * 10**6,
-                    'DAI': 98234432 * 10**18,
-                    'WETH': 44750 * 10**18
-                },
+                'address': config.config['contracts'].get('contract_name', '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2'),
+                'limits': {}  # Will be populated dynamically,
                 'fee': 0.0009,
                 'function': 'flashLoanSimple'
             },
             'balancer': {
-                'address': '0xBA12222222228d8Ba445958a75a0704d566BF2C8',
-                'limits': {
-                    'USDC': 78234000 * 10**6,
-                    'USDT': 67892000 * 10**6,
-                    'DAI': 45000000 * 10**18,
-                    'WETH': 15000 * 10**18
-                },
+                'address': config.config['contracts'].get('contract_name', '0xBA12222222228d8Ba445958a75a0704d566BF2C8'),
+                'limits': {}  # Will be populated dynamically,
                 'fee': 0,
                 'function': 'flashLoan'
             },
             'dydx': {
-                'address': '0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e',
-                'limits': {
-                    'USDC': 34234000 * 10**6,
-                    'WETH': 7300 * 10**18
-                },
+                'address': config.config['contracts'].get('contract_name', '0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e'),
+                'limits': {}  # Will be populated dynamically,
                 'fee': 0.0002,
                 'function': 'operate'
             },
             'uniswap_v3': {
-                'address': '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640',
-                'limits': {
-                    'USDC': 156000000 * 10**6,
-                    'WETH': 27800 * 10**18
-                },
+                'address': config.config['contracts'].get('contract_name', '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640'),
+                'limits': {}  # Will be populated dynamically,
                 'fee': 0.0005,
                 'function': 'flash'
             },
             'compound': {
-                'address': '0xc3d688B66703497DAA19211EEdff47f25384cdc3',
-                'limits': {
-                    'USDC': 93000000 * 10**6,
-                    'USDT': 45000000 * 10**6
-                },
+                'address': config.config['contracts'].get('contract_name', '0xc3d688B66703497DAA19211EEdff47f25384cdc3'),
+                'limits': {}  # Will be populated dynamically,
                 'fee': 0.0009,
                 'function': 'flashLoan'
             },
             'maker': {
-                'address': '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA',
-                'limits': {
-                    'DAI': 250000000 * 10**18
-                },
+                'address': config.config['contracts'].get('contract_name', '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA'),
+                'limits': {}  # Will be populated dynamically,
                 'fee': 0,
                 'function': 'flashLoan'
             }
         }
         
         self.token_addresses = {
-            'USDC': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-            'USDT': '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-            'DAI': '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-            'WETH': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+            'USDC': config.config['contracts'].get('contract_name', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'),
+            'USDT': config.config['contracts'].get('contract_name', '0xdAC17F958D2ee523a2206206994597C13D831ec7'),
+            'DAI': config.config['contracts'].get('contract_name', '0x6B175474E89094C44Da98b954EedeAC495271d0F'),
+            'WETH': config.config['contracts'].get('contract_name', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2')
         }
     
     async def get_optimal_loans(self, required_amount: int, token: str = 'USDC') -> List[Dict]:

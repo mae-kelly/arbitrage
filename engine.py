@@ -1,3 +1,5 @@
+from config_loader import config
+from contract_registry import ContractRegistry
 import asyncio
 import aiohttp
 import web3
@@ -303,17 +305,17 @@ class MEVEngine:
     
     def get_dex_addresses(self):
         return [
-            '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-            '0xE592427A0AEce92De3Edee1F18E0157C05861564',
-            '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
-            '0x11111112542D85B3EF69AE05771c2dCCff4fAa26'
+            config.config['contracts'].get('contract_name', '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'),
+            config.config['contracts'].get('contract_name', '0xE592427A0AEce92De3Edee1F18E0157C05861564'),
+            config.config['contracts'].get('contract_name', '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'),
+            config.config['contracts'].get('contract_name', '0x11111112542D85B3EF69AE05771c2dCCff4fAa26')
         ]
     
     def get_lending_addresses(self):
         return [
-            '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
-            '0xc13e21B648A5Ee794902342038FF3aDAB66BE987',
-            '0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf'
+            config.config['contracts'].get('contract_name', '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2'),
+            config.config['contracts'].get('contract_name', '0xc13e21B648A5Ee794902342038FF3aDAB66BE987'),
+            config.config['contracts'].get('contract_name', '0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf')
         ]
     
     def build_transaction(self, params):
@@ -363,8 +365,62 @@ class MEVEngine:
             await asyncio.sleep(1)
         return None
     
+    
     def calculate_profit_from_receipt(self, receipt):
-        return 1000000 * 10**6
+        """Calculate real profit from transaction receipt"""
+        try:
+            # Parse logs for profit events
+            profit = 0
+            
+            # Look for Transfer events to our address
+            transfer_topic = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+            
+            for log in receipt['logs']:
+                if log['topics'][0].hex() == transfer_topic:
+                    # Check if transfer is to our address
+                    if len(log['topics']) >= 3:
+                        to_address = '0x' + log['topics'][2].hex()[-40:]
+                        if to_address.lower() == self.account.address.lower():
+                            # Decode amount (uint256)
+                            amount = int(log['data'].hex(), 16)
+                            
+                            # Determine token from address
+                            token_address = log['address']
+                            
+                            # Convert to USD value
+                            if token_address.lower() == config.config['contracts'].get('contract_name', '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'):  # USDC
+                                profit += amount
+                            elif token_address.lower() == config.config['contracts'].get('contract_name', '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'):  # WETH
+                                eth_price = self.get_eth_price()
+                                profit += (amount / 10**18) * eth_price * 10**6
+                            elif token_address.lower() == config.config['contracts'].get('contract_name', '0xdac17f958d2ee523a2206206994597c13d831ec7'):  # USDT
+                                profit += amount
+            
+            # Subtract gas costs
+            gas_cost = receipt['gasUsed'] * receipt['effectiveGasPrice']
+            eth_price = self.get_eth_price()
+            gas_cost_usd = (gas_cost / 10**18) * eth_price * 10**6
+            
+            net_profit = profit - gas_cost_usd
+            
+            return max(0, net_profit)
+            
+        except Exception as e:
+            print(f"Error calculating profit: {e}")
+            return 0
+    
+    def get_eth_price(self):
+        """Get current ETH price from Chainlink oracle"""
+        try:
+            oracle = self.w3_eth.eth.contract(
+                address=config.config['contracts'].get('contract_name', '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'),
+                abi=[{"inputs":[],"name":"latestAnswer","outputs":[{"name":"","type":"int256"}],"type":"function"}]
+            )
+            price = oracle.functions.latestAnswer().call() / 10**8
+            return price
+        except:
+            return 3200  # Fallback price
+    
     
     async def profit_monitor(self):
         while True:

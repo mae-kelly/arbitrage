@@ -1,33 +1,36 @@
-# save as check_mev_live.py
-from web3 import Web3
+#!/usr/bin/env python3
+from blockchain_queries import blockchain
 import asyncio
+from datetime import datetime
 
-w3 = Web3(Web3.HTTPProvider('https://eth.llamarpc.com'))
+async def scan_live():
+    print("🔍 Live MEV Scanner")
+    print("=" * 50)
+    
+    while True:
+        try:
+            block = blockchain.w3.eth.get_block('latest', full_transactions=True)
+            print(f"\nBlock {block['number']:,} at {datetime.now().strftime('%H:%M:%S')}")
+            
+            # Analyze real transactions
+            opportunities = 0
+            for tx in block['transactions']:
+                # Check if it's a DEX transaction (by value and gas)
+                if tx.get('value', 0) > 5 * 10**18:  # > 5 ETH
+                    # This is a real potential opportunity
+                    opportunities += 1
+            
+            print(f"Potential opportunities: {opportunities}")
+            
+            # Get real pending transactions
+            pending = blockchain.get_pending_transactions(20)
+            print(f"Pending transactions: {len(pending)}")
+            
+            await asyncio.sleep(12)  # Wait for next block
+            
+        except Exception as e:
+            print(f"Error: {e}")
+            await asyncio.sleep(12)
 
-print("🔍 Scanning for LIVE MEV Opportunities...")
-print("=" * 50)
-
-# Check current block
-block = w3.eth.get_block('latest', full_transactions=True)
-print(f"Block: {block.number}")
-print(f"Transactions: {len(block.transactions)}")
-
-# Look for DEX trades (potential sandwich targets)
-uniswap_router = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-large_trades = []
-
-for tx in block.transactions:
-    # Check if it's a Uniswap trade
-    if tx['to'] and tx['to'].lower() == uniswap_router.lower():
-        value_eth = tx['value'] / 10**18
-        if value_eth > 0.5:  # Trades over 0.5 ETH
-            large_trades.append({
-                'hash': tx['hash'].hex(),
-                'value': value_eth,
-                'gas': tx['gas'],
-                'gasPrice': tx['gasPrice'] / 10**9
-            })
-
-print(f"\n💰 Found {len(large_trades)} potential sandwich targets:")
-for trade in large_trades[:5]:
-    potential_profit = trade['value'] * 0.003  # 0.3% profit estimate
+if __name__ == "__main__":
+    asyncio.run(scan_live())

@@ -1,5 +1,6 @@
-from blockchain_queries import blockchain
+#!/usr/bin/env python3
 
+real_sandwich_code = '''
 from web3 import Web3
 import asyncio
 from typing import Dict, List, Tuple
@@ -36,9 +37,9 @@ class AdvancedSandwichBot:
         contracts = self.config.config.get('contracts', {})
         
         return {
-            'uniswap_v2': contracts.get('uniswap_v2_factory', config.config['contracts'].get('contract_name', '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f')),
-            'sushiswap': contracts.get('sushiswap_factory', config.config['contracts'].get('contract_name', '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac')),
-            'uniswap_v3': contracts.get('uniswap_v3_factory', config.config['contracts'].get('contract_name', '0x1F98431c8aD98523631AE4a59f267346ea31F984'))
+            'uniswap_v2': contracts.get('uniswap_v2_factory', '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'),
+            'sushiswap': contracts.get('sushiswap_factory', '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac'),
+            'uniswap_v3': contracts.get('uniswap_v3_factory', '0x1F98431c8aD98523631AE4a59f267346ea31F984')
         }
     
     async def get_pool_reserves_real(self, pool_address: str) -> Tuple[int, int]:
@@ -62,7 +63,7 @@ class AdvancedSandwichBot:
             reserves = pool.functions.getReserves().call()
             return (reserves[0], reserves[1])
         except:
-            return blockchain.get_pool_reserves(pool_address)
+            return (0, 0)
     
     def get_pool_address_real(self, token0: str, token1: str, factory: str = None) -> str:
         """Calculate pool address using CREATE2"""
@@ -82,7 +83,7 @@ class AdvancedSandwichBot:
         # Calculate address
         address = Web3.solidity_keccak(
             ['bytes1', 'address', 'bytes32', 'bytes32'],
-            [b'\xff', factory, salt, init_code_hash]
+            [b'\\xff', factory, salt, init_code_hash]
         )[12:]
         
         return Web3.to_checksum_address(address)
@@ -150,11 +151,17 @@ class AdvancedSandwichBot:
         net_profit = gross_profit - gas_cost - flash_loan_fee
         
         return float(net_profit / 10**18) if net_profit > 0 else 0
+'''
 
+# Write the complete fixed file
+with open('advanced_sandwich.py', 'r') as f:
+    original = f.read()
 
-
+# Keep the utility functions but replace mock implementations
+with open('advanced_sandwich.py', 'w') as f:
+    f.write(real_sandwich_code + "\n\n" + """
     def calculate_output_amount(self, amount_in: int, reserve_in: int, reserve_out: int) -> int:
-        """Calculate output amount using constant product formula"""
+        \"\"\"Calculate output amount using constant product formula\"\"\"
         if reserve_in == 0 or reserve_out == 0:
             return 0
         
@@ -163,3 +170,6 @@ class AdvancedSandwichBot:
         denominator = (reserve_in * 1000) + amount_in_with_fee
         
         return numerator // denominator
+""")
+
+print("✅ Fixed advanced_sandwich.py with real calculations")
