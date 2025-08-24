@@ -59,6 +59,12 @@ const defaultEvmTargets: { [key: string]: string } = {
   "0.8.20": "shanghai",
   "0.8.21": "shanghai",
   "0.8.22": "shanghai",
+  "0.8.23": "shanghai",
+  "0.8.24": "shanghai",
+  "0.8.25": "cancun",
+  "0.8.26": "cancun",
+  "0.8.27": "cancun",
+  "0.8.28": "cancun",
 };
 
 export function getEvmVersionFromSolcVersion(

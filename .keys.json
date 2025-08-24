@@ -1,14 +1,6 @@
 {
   "main": {
-    "address": "0x706D20483DD4A951F32CbdC84D625a262072DBef",
-    "private_key": "2108e5c5c575c92fbb6ea9c3ec25bfea74cd765ad2fa053d9a7697da83ef6cd3"
-  },
-  "flashbots": {
-    "address": "0xebCF51af65EFE54F6247f12A4016eDe2264B2D8b",
-    "private_key": "d73822a363621fad8470fdfde31a4f90cc53b5704db026353c22f40425c3be51"
-  },
-  "validator": {
-    "address": "0x4c5D31f431C1CF38a0BE220F3C4DF286Dc0fE402",
-    "private_key": "c4993de3344cd5e7332191cddbc95ab1c7ec3f0bb760bb5894aaf0950976089b"
+    "address": "0x0000000000000000000000000000000000000000",
+    "private_key": "0x0000000000000000000000000000000000000000000000000000000000000000"
   }
 }
