@@ -1,6 +1,3 @@
-#!/bin/bash
-
-cat > reality_check.py << 'PYTHON'
 from web3 import Web3
 
 w3 = Web3(Web3.HTTPProvider('https://rpc.flashbots.net'))
@@ -54,6 +51,3 @@ else:
 # To make $100 profit, you'd need:
 min_arb_needed = (100 + total_costs) / (eth_price * eth_amount)
 print(f"\nTo make $100 profit, you need {min_arb_needed*100:.2f}% price difference")
-PYTHON
-
-python3 reality_check.py
