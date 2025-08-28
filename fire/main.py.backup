@@ -1,0 +1,191 @@
+from datetime import datetime, timezone
+import asyncio
+import json
+import os
+import sys
+from typing import List, Dict, Any
+from web3 import Web3
+from colorama import Fore, Style, init
+
+# Add project root to path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# Import core modules
+from config import Config
+from core.rpc_manager import RPCManager
+from core.dex_client import DEXClient
+from core.discord_notifier import DiscordNotifier
+
+# Import strategies (only DEX for now)
+from strategies.dex_arbitrage import DEXArbitrageStrategy
+
+init(autoreset=True)
+
+class TradingBot:
+    def __init__(self):
+        self.config = Config()
+        self.rpc_manager = RPCManager()
+        self.dex_client = DEXClient(self.rpc_manager)
+        self.discord = DiscordNotifier(self.config.DISCORD_WEBHOOK_URL)
+        
+        # Only use DEX strategy to avoid errors
+        self.strategies = [
+            DEXArbitrageStrategy(self.dex_client, self.discord),
+        ]
+        
+        self.performance_metrics = {
+            'opportunities_found': 0,
+            'trades_executed': 0,
+            'total_profit': 0,
+            'start_balance': 0,
+            'current_balance': 0
+        }
+        
+        self.is_running = False
+        self.start_time = datetime.now(timezone.utc)
+    
+    async def initialize(self):
+        """Initialize all components"""
+        print(f"{Fore.CYAN}Initializing DeFi Trading Bot...{Style.RESET_ALL}")
+        
+        # Initialize RPC manager
+        await self.rpc_manager.initialize()
+        
+        # Initialize DEX client
+        await self.dex_client.initialize()
+        
+        # Initialize strategies
+        for strategy in self.strategies:
+            await strategy.initialize()
+        
+        # Get initial balance
+        try:
+            w3 = Web3(Web3.HTTPProvider(self.config.RPC_URL)).w3 if hasattr(self.rpc_manager.get_best_provider(), 'w3') else Web3(Web3.HTTPProvider(self.config.RPC_URL))
+            balance = w3.eth.get_balance(self.config.WALLET_ADDRESS)
+            self.performance_metrics['start_balance'] = float(Web3.from_wei(balance, 'ether'))
+            self.performance_metrics['current_balance'] = self.performance_metrics['start_balance']
+            
+            print(f"{Fore.GREEN}✓ Initialization complete{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Wallet: {self.config.WALLET_ADDRESS}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Balance: {self.performance_metrics['start_balance']:.4f} ETH{Style.RESET_ALL}")
+        except Exception as e:
+            print(f"{Fore.RED}Warning: Could not get initial balance: {e}{Style.RESET_ALL}")
+    
+    async def scan_opportunities(self):
+        """Scan for arbitrage opportunities across all strategies"""
+        tasks = []
+        for strategy in self.strategies:
+            tasks.append(strategy.find_opportunity())
+        
+        opportunities = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        valid_opportunities = []
+        for opp in opportunities:
+            if isinstance(opp, Exception):
+                continue
+            if opp and opp.get('profit', 0) > 0:
+                valid_opportunities.append(opp)
+                self.performance_metrics['opportunities_found'] += 1
+        
+        return valid_opportunities
+    
+    async def execute_opportunity(self, opportunity: Dict[str, Any]):
+        """Execute an arbitrage opportunity"""
+        try:
+            strategy_name = opportunity.get('strategy')
+            for strategy in self.strategies:
+                if strategy.__class__.__name__ == strategy_name:
+                    success = await strategy.execute(opportunity)
+                    if success:
+                        self.performance_metrics['trades_executed'] += 1
+                        self.performance_metrics['total_profit'] += opportunity.get('profit', 0)
+                        return True
+            return False
+        except Exception as e:
+            print(f"{Fore.RED}Execution error: {e}{Style.RESET_ALL}")
+            return False
+    
+    async def monitor_performance(self):
+        """Monitor and log performance metrics"""
+        while self.is_running:
+            try:
+                # Update current balance
+                w3 = Web3(Web3.HTTPProvider(self.config.RPC_URL)).w3 if hasattr(self.rpc_manager.get_best_provider(), 'w3') else Web3(Web3.HTTPProvider(self.config.RPC_URL))
+                balance = w3.eth.get_balance(self.config.WALLET_ADDRESS)
+                self.performance_metrics['current_balance'] = float(Web3.from_wei(balance, 'ether'))
+                
+                # Calculate PnL
+                pnl = self.performance_metrics['current_balance'] - self.performance_metrics['start_balance']
+                pnl_percent = (pnl / self.performance_metrics['start_balance'] * 100) if self.performance_metrics['start_balance'] > 0 else 0
+                
+                # Log metrics
+                print(f"\n{Fore.CYAN}=== Performance Metrics ==={Style.RESET_ALL}")
+                print(f"Uptime: {self.get_uptime():.0f}s")
+                print(f"Opportunities Found: {self.performance_metrics['opportunities_found']}")
+                print(f"Trades Executed: {self.performance_metrics['trades_executed']}")
+                print(f"Current Balance: {self.performance_metrics['current_balance']:.4f} ETH")
+                print(f"PnL: {pnl:+.4f} ETH ({pnl_percent:+.2f}%)")
+                
+                await asyncio.sleep(60)  # Update every minute
+            except Exception as e:
+                print(f"{Fore.RED}Performance monitoring error: {e}{Style.RESET_ALL}")
+                await asyncio.sleep(60)
+    
+    def get_uptime(self):
+        """Get bot uptime in seconds"""
+        return (datetime.now(timezone.utc) - self.start_time).total_seconds()
+    
+    async def start(self):
+        """Start the trading bot"""
+        await self.initialize()
+        
+        print(f"\n{Fore.GREEN}{'='*50}")
+        print(f"   DeFi Arbitrage Bot Started")
+        print(f"{'='*50}{Style.RESET_ALL}\n")
+        
+        self.is_running = True
+        
+        # Start performance monitoring
+        monitor_task = asyncio.create_task(self.monitor_performance())
+        
+        # Main trading loop
+        while self.is_running:
+            try:
+                # Scan for opportunities
+                opportunities = await self.scan_opportunities()
+                
+                if opportunities:
+                    # Sort by profit
+                    opportunities.sort(key=lambda x: x.get('profit', 0), reverse=True)
+                    
+                    # Execute best opportunity
+                    best_opp = opportunities[0]
+                    print(f"\n{Fore.GREEN}Found opportunity with profit: {best_opp.get('profit', 0):.4f} ETH{Style.RESET_ALL}")
+                    
+                    success = await self.execute_opportunity(best_opp)
+                    if success:
+                        print(f"{Fore.GREEN}✓ Trade executed successfully{Style.RESET_ALL}")
+                
+                await asyncio.sleep(5)  # Scan every 5 seconds
+                
+            except KeyboardInterrupt:
+                print(f"\n{Fore.YELLOW}Shutting down...{Style.RESET_ALL}")
+                self.is_running = False
+                break
+            except Exception as e:
+                print(f"{Fore.RED}Main loop error: {e}{Style.RESET_ALL}")
+                await asyncio.sleep(5)
+        
+        monitor_task.cancel()
+    
+    async def stop(self):
+        """Stop the trading bot"""
+        self.is_running = False
+        print(f"{Fore.YELLOW}Bot stopped{Style.RESET_ALL}")
+
+if __name__ == "__main__":
+    bot = TradingBot()
+    try:
+        asyncio.run(bot.start())
+    except KeyboardInterrupt:
+        print(f"\n{Fore.YELLOW}Bot stopped by user{Style.RESET_ALL}")

@@ -1,0 +1,24 @@
+====================================
+    Testnet Faucets for sepolia    
+====================================
+
+Sepolia ETH Faucets:
+- https://sepoliafaucet.com/
+- https://www.alchemy.com/faucets/ethereum-sepolia
+- https://faucet.quicknode.com/ethereum/sepolia
+
+Arbitrum Sepolia:
+- https://faucet.quicknode.com/arbitrum/sepolia
+
+Optimism Sepolia:
+- https://faucet.quicknode.com/optimism/sepolia
+
+Base Sepolia:
+- https://faucet.quicknode.com/base/sepolia
+
+Test Token Faucets:
+- Uniswap Testnet: https://app.uniswap.org/swap (use testnet mode)
+- AAVE Testnet: https://staging.aave.com/faucet/
+
+OKX Testnet:
+- https://www.okx.com/testnet
